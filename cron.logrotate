@@ -1,5 +1,0 @@
-/var/log/cron {
-    postrotate
-	/bin/killall -HUP crond
-    endscript
-}
