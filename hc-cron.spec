@@ -15,6 +15,8 @@ Source1:	hc-cron.init
 Source2:	cron.log
 Source3:	run-parts
 Source4:	hc-cron.crontab
+Source5:	crontab.1.pl
+Source6:	cron.8.pl
 Patch:		hc-cron-syscrondir.patch
 Prereq:		/sbin/chkconfig
 Provides:	crontabs
@@ -62,7 +64,7 @@ make OPTIM="$RPM_OPT_FLAGS"
 %install
 rm -rf $RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT/usr/{sbin,bin,man/man{1,5,8}} \
+install -d $RPM_BUILD_ROOT/usr/{sbin,bin,man/{man{1,5,8},pl/man{1,8}}} \
 	$RPM_BUILD_ROOT/var/spool/cron \
 	$RPM_BUILD_ROOT/etc/{crontab.d,rc.d/init.d,logrotate.d} \
 	$RPM_BUILD_ROOT/etc/cron.{hourly,daily,weekly,monthly}
@@ -72,15 +74,18 @@ install crontab $RPM_BUILD_ROOT/usr/bin
 install crontab.1 $RPM_BUILD_ROOT/usr/man/man1
 install crontab.5 $RPM_BUILD_ROOT/usr/man/man5
 install cron.8 $RPM_BUILD_ROOT/usr/man/man8
+install %{SOURCE5} $RPM_BUILD_ROOT/usr/man/pl/man1/crontab.1
+install %{SOURCE6} $RPM_BUILD_ROOT/usr/man/pl/man8/cron.8
 
 echo ".so cron.8" > $RPM_BUILD_ROOT/usr/man/man8/crond.8
+echo ".so cron.8" > $RPM_BUILD_ROOT/usr/man/pl/man8/crond.8
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/crond
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/logrotate.d/cron
 install %{SOURCE3} $RPM_BUILD_ROOT/usr/bin
 install %{SOURCE4} $RPM_BUILD_ROOT/etc/crontab.d/system
 
-gzip -9nf $RPM_BUILD_ROOT/usr/man/man*/*
+gzip -9nf $RPM_BUILD_ROOT/usr/man/{man*/*,pl/man*/*}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -114,10 +119,11 @@ fi
 %attr(750,root,root) %dir /etc/cron.*
 
 %attr(0755,root,root) /usr/sbin/crond
-%attr(4711,root,root) /usr/bin/crontab
+%attr(4755,root,root) /usr/bin/crontab
 %attr(0755,root,root) /usr/bin/run-parts
 
 /usr/man/man*/*
+%lang(pl) /usr/man/pl/man*/*
 
 %attr(750,root,root) %dir /var/spool/cron
 
