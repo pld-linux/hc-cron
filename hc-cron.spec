@@ -1,5 +1,4 @@
 Summary:	Home computer cron daemon
-Summary(de):	Home computer cron daemon
 Summary(fr):	Démon Home computer cron
 Summary(pl):	Demon cron dla domowego komputera
 Summary(tr):	Home computer cron süreci, periyodik program çalýþtýrma yeteneði
@@ -31,10 +30,12 @@ Obsoletes:	vixie-cron
 Obsoletes:	crontabs
 
 %description
-cron is a standard UNIX program that runs user-specified programs at
-periodic scheduled times. hc-cron adds a number of features to the
-basic UNIX cron, including better security and more powerful
-configuration options.
+hc-cron is a cron daemon for home computers. It runs specified jobs at
+periodic intervals and will remember the time when it was shut down and
+catch up jobs that have occurred during down time when it is started
+again. Hc-cron is based on the widely used vixie-cron and uses the same
+crontab format so that it can be used as a drop-in replacement for that
+program.
 
 %description -l de
 cron ist ein Standard-UNIX-Programm, das zu vorgegebenen Zeiten vom
@@ -50,10 +51,11 @@ base, dont une plus grande sécurité et des options de configuration
 plus puissantes.
 
 %description -l pl
-cron to standardowy uniksowy program, który okresowo uruchamia
-okre¶lone przez u¿ytkowników programy. hc-cron dodaje mo¿liwo¶ci
-podstawowemu uniksowemu cronowi, w tym lepsze bezpieczeñstwo i
-bogatsze opcje konfiguracyjne.
+hc-cron jest demonem cron dla domowych komputerów. Uruchamia zadania
+w okre¶lonych odstêpach czasu oraz pamiêta kiedy zosta³ wy³±czony, by
+móc wykonaæ pominiête zadania gdy zostanie ponownie uruchomiony.
+Hc-cron jest oparty na szeroko u¿ywanyn vixie cronie i u¿ywa tego
+samego formatu pliku crontab, wiêc mo¿na stosowaæ zamiennie te programy.
 
 %description -l tr
 cron UNIX'de standart olarak belirli zamanlarda bir programý
