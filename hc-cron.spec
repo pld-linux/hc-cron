@@ -5,7 +5,7 @@ Summary(pl):	Demon cron dla domowego komputera
 Summary(tr):	Home computer cron süreci, periyodik program çalýþtýrma yeteneði
 Name:		hc-cron
 Version:	0.13
-Release:	1
+Release:	2
 Copyright:	GPL
 Group:		Daemons
 Group(pl):	Serwery
