@@ -124,7 +124,7 @@ fi
 %attr(640,root,root) %config %verify(not size mtime md5) /etc/sysconfig/*
 
 %attr(750,root,root) %dir /etc/cron.*
-%attr(640,root,root) %config /etc/cron/*
+%attr(640,root,root) %config %verify(not size mtime md5) /etc/cron/*
 %attr(640,root,root) /etc/cron.d/*
 
 %attr(0755,root,root) %{_sbindir}/crond
