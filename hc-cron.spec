@@ -4,7 +4,7 @@ Summary(pl):	Demon cron dla domowego komputera
 Summary(tr):	Home computer cron süreci, periyodik program çalýþtýrma yeteneði
 Name:		hc-cron
 Version:	0.14
-Release:	11.2
+Release:	12
 License:	GPL
 Group:		Daemons
 Source0:	ftp://ftp.berlios.de/pub/hc-cron/stable/%{name}-%{version}.tar.gz
@@ -79,7 +79,7 @@ daha güvenlidir ve daha geliþmiþ yapýlandýrma seçenekleri içerir.
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/{cron.{hourly,daily,weekly,monthly},cron} \
-$RPM_BUILD_ROOT%{_sysconfdir}/{cron.d,rc.d/init.d,logrotate.d,sysconfig} \
+	$RPM_BUILD_ROOT%{_sysconfdir}/{cron.d,rc.d/init.d,logrotate.d,sysconfig} \
 	$RPM_BUILD_ROOT%{_mandir}/{man{1,5,8},pl/man{1,8}} \
 	$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}} \
 	$RPM_BUILD_ROOT/var/{spool/cron,log}
@@ -141,7 +141,6 @@ if [ "$1" = "0" ]; then
         echo "Removing group crontab."
         /usr/sbin/groupdel crontab
 fi
-
 
 %triggerpostun -- vixie-cron
 /sbin/chkconfig --add crond
