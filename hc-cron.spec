@@ -29,10 +29,13 @@ Requires:	/bin/run-parts
 Requires:	psmisc >= 20.1
 Provides:	crontabs
 Provides:	crondaemon
-BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+Provides:	group(crontab)
 Obsoletes:	crondaemon
-Obsoletes:	vixie-cron
 Obsoletes:	crontabs
+Obsoletes:	fcron
+Obsoletes:	mcron
+Obsoletes:	vixie-cron
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 hc-cron is a cron daemon for home computers. It runs specified jobs at
@@ -141,8 +144,7 @@ fi
 
 %postun
 if [ "$1" = "0" ]; then
-	echo "Removing group crontab."
-	/usr/sbin/groupdel crontab
+	%groupremove crontab
 fi
 
 %triggerpostun -- hc-cron <= 0.14-8
