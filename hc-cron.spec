@@ -11,10 +11,13 @@ Group:       Daemons
 Source0:     ftp://sunsite.unc.edu/pub/Linux/system/daemons/cron/%{name}-%{version}.tar.gz
 Source1:     hc-cron.init
 Source2:     cron.log
+Source3:     run-parts
+Source4:     hc-cron.crontab
 Patch:       hc-cron-syscrondir.patch
 Prereq:      /sbin/chkconfig
+Provides:    crontabs
 Buildroot:   /tmp/%{name}-%{version}-root
-Obsoletes:   vixie-cron
+Obsoletes:   vixie-cron crontabs
 
 %description
 cron is a standard UNIX program that runs user-specified programs at
@@ -56,7 +59,8 @@ make OPTIM="$RPM_OPT_FLAGS"
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/usr/{sbin,bin,man/man{1,5,8}} \
 	$RPM_BUILD_ROOT/var/spool/cron \
-	$RPM_BUILD_ROOT/etc/{crontab.d,rc.d/init.d,logrotate.d}
+	$RPM_BUILD_ROOT/etc/{crontab.d,rc.d/init.d,logrotate.d} \
+	$RPM_BUILD_ROOT/etc/cron.{hourly,daily,weekly,monthly}
 
 install cron $RPM_BUILD_ROOT/usr/sbin/crond
 install crontab $RPM_BUILD_ROOT/usr/bin
@@ -64,34 +68,55 @@ install crontab.1 $RPM_BUILD_ROOT/usr/man/man1
 install crontab.5 $RPM_BUILD_ROOT/usr/man/man5
 install cron.8 $RPM_BUILD_ROOT/usr/man/man8
 echo ".so cron.8" >$RPM_BUILD_ROOT/usr/man/man8/crond.8
-install $RPM_SOURCE_DIR/hc-cron.init $RPM_BUILD_ROOT/etc/rc.d/init.d/crond
-install $RPM_SOURCE_DIR/cron.log $RPM_BUILD_ROOT/etc/logrotate.d/cron
+
+install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/crond
+install %{SOURCE2} $RPM_BUILD_ROOT/etc/logrotate.d/cron
+install %{SOURCE3} $RPM_BUILD_ROOT/usr/bin
+install %{SOURCE3} $RPM_BUILD_ROOT/etc/crontab.d/system
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %post
 /sbin/chkconfig --add crond
+if test -r /var/run/crond.pid then
+	/etc/rc.d/init.d/crond restart >&2
+fi
 
 %preun
 if [ $1 = 0 ]; then 
-    /sbin/chkconfig --del crond
+	/etc/rc.d/init.d/crond stop > &2
+	/sbin/chkconfig --del crond
 fi
 
 %triggerpostun -- vixie-cron
 /sbin/chkconfig --add crond
 
 %files
-%defattr(644, root, root, 755)
-%attr(700, root, root) /usr/sbin/crond
-%attr(4755, root, root) /usr/bin/crontab
-%attr(644, root, man) /usr/man/man*/*
-%attr(700, root, root) /var/spool/cron
-/etc/crontab.d
-%config %attr(755, root, root) /etc/rc.d/init.d/crond
+%defattr(600, root, root, 700)
+%attr(755, root, root) %config /etc/rc.d/init.d/crond
 %config /etc/logrotate.d/cron
+/etc/crontab.d
+%dir /etc/cron.*
+%attr(700, root, root) /usr/sbin/crond
+%attr(4755,root, root) /usr/bin/crontab
+%attr(755, root, root) /usr/bin/run-parts
+%attr(644, root,  man) /usr/man/man*/*
+/var/spool/cron
 
 %changelog
+* Mon Nov 16 1998 Tomasz K³oczko <kloczek@rudy.mif.pg.gda.pl>
+  [0.11-1]
+- added crontabs to Obsoletes,
+- added Provides: crontabs,
+- changed %defattr to (600, root, root, 700),
+- added restatring service in %post if before insall was started,
+- added stop service in %preun on uninstall package,
+- added NICE=15 in default crontab (as Qrczak suggest),
+- new hc-cron-syscrondir.patch (made by Marcin 'Qrczak' Kowalczyk
+  <qrczak@knm.org.pl>),
+- added using %{SOURCE#} macros in %install.
+
 * Mon Oct 5 1998 Marcin 'Qrczak' Kowalczyk <qrczak@knm.org.pl>
   [0.10-1]
 - package generally reviewed: now properly handles catched-up jobs
@@ -150,4 +175,4 @@ fi
 - built against glibc
 
 * Wed Feb 19 1997 Erik Troan <ewt@redhat.com>
-- Switch conditional from "axp" to "alpha" 
+- Switch conditional from "axp" to "alpha"
