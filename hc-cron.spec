@@ -69,7 +69,7 @@ install -d $RPM_BUILD_ROOT/usr/{sbin,bin,man/{man{1,5,8},pl/man{1,8}}} \
 	$RPM_BUILD_ROOT/etc/{crontab.d,rc.d/init.d,logrotate.d} \
 	$RPM_BUILD_ROOT/etc/cron.{hourly,daily,weekly,monthly}
 
-install cron $RPM_BUILD_ROOT/usr/sbin/crond
+install cron $RPM_BUILD_ROOT%{_sbindir}/crond
 install crontab $RPM_BUILD_ROOT%{_bindir}
 install crontab.1 $RPM_BUILD_ROOT%{_mandir}/man1
 install crontab.5 $RPM_BUILD_ROOT%{_mandir}/man5
@@ -118,7 +118,7 @@ fi
 /etc/crontab.d/*
 %attr(750,root,root) %dir /etc/cron.*
 
-%attr(0755,root,root) /usr/sbin/crond
+%attr(0755,root,root) %{_sbindir}/crond
 %attr(4755,root,root) %{_bindir}/crontab
 %attr(0755,root,root) %{_bindir}/run-parts
 
@@ -178,7 +178,7 @@ fi
 - added %setup -q parameter
 - `mkdir -p' replaced with more standard `install -d'
 - added full %attr description in %files
-- /usr/sbin/crond permissions changed to 700
+- %{_sbindir}/crond permissions changed to 700
 - replaced symlink in man page with .so include
 - added pl translation
 - changed install procedure to allow building from non-root account
