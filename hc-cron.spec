@@ -10,8 +10,7 @@ License:	GPL
 Group:		Daemons
 Group(de):	Server
 Group(pl):	Serwery
-#Source0:	ftp://sunsite.unc.edu/pub/Linux/system/daemons/cron/%{name}-%{version}.tar.gz
-Source0:	ftp://hc-cron.berlios.de/pub/hc-cron/stable/hc-cron-0.14.tar.gz
+Source0:	ftp://hc-cron.berlios.de/pub/hc-cron/stable/%{name}-%{version}.tar.gz
 Source1:	%{name}.init
 Source2:	cron.logrotate
 Source3:	%{name}.crontab
@@ -20,7 +19,7 @@ Source5:	cron.8.pl
 Source6:	cron.sysconfig
 Patch0:		%{name}-syscrondir.patch
 Patch1:		%{name}-paths.patch
-Patch2:         %{name}-time.patch
+Patch2:		%{name}-time.patch
 Prereq:		/sbin/chkconfig
 Prereq:		rc-scripts
 Requires:	/bin/run-parts
@@ -73,7 +72,7 @@ daha güvenlidir ve daha geliþmiþ yapýlandýrma seçenekleri içerir.
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/{cron.{hourly,daily,weekly,monthly},cron} \
-	$RPM_BUILD_ROOT/etc/{cron.d,rc.d/init.d,logrotate.d,sysconfig} \
+$RPM_BUILD_ROOT%{_sysconfdir}/{cron.d,rc.d/init.d,logrotate.d,sysconfig} \
 	$RPM_BUILD_ROOT%{_mandir}/{man{1,5,8},pl/man{1,8}} \
 	$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}} \
 	$RPM_BUILD_ROOT/var/{spool/cron,log} 
