@@ -58,7 +58,7 @@
  			 * during downtime. Added by hcl feb98
  			 */
 -#define LASTRUN_FILE	"/var/lib/cron.lastrun"
-+#define LASTRUN_FILE	"/var/lib/cron.lastrun"
++#define LASTRUN_FILE	"/var/lib/misc/cron.lastrun"
  
  			/* we get the system loadaverage from here.
  			 * If not defined RUN_ONLY_IDLE is disabled.
