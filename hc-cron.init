@@ -17,15 +17,13 @@
 # See how we were called.
 case "$1" in
   start)
-	echo -n "Starting cron daemon: "
+	show "Starting cron daemon"
 	daemon crond
-	echo
 	touch /var/lock/subsys/crond
 	;;
   stop)
-	echo -n "Stopping cron daemon: "
+	show "Stopping cron daemon"
 	killproc crond
-	echo
 	rm -f /var/lock/subsys/crond
 	;;
   status)
