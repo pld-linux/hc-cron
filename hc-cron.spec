@@ -19,7 +19,8 @@ Source4:	hc-cron.crontab
 Patch:		hc-cron-syscrondir.patch
 Prereq:		/sbin/chkconfig
 Provides:	crontabs
-Obsoletes:	vixie-cron crontabs
+Obsoletes:	vixie-cron
+Obsoletes:	crontabs
 Buildroot:	/tmp/%{name}-%{version}-root
 
 
@@ -116,11 +117,16 @@ fi
 %attr(4711,root,root) /usr/bin/crontab
 %attr(0755,root,root) /usr/bin/run-parts
 
-%attr(0644,root, man) /usr/man/man*/*
+/usr/man/man*/*
 
 %attr(750,root,root) %dir /var/spool/cron
 
 %changelog
+* Thu Apr 22 1999 Artur Frysiak <wiget@pld.org.pl>
+  [0.11-5]
+- compiled on rpm 3
+- removed man group from man pages
+
 * Sat Mar 06 1999 Wojtek ¦lusarczyk <wojtek@shadow.eu.org>
   [0.11-4]
 - fixed files permissions,
