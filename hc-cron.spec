@@ -67,10 +67,11 @@ make OPTIM="$RPM_OPT_FLAGS"
 %install
 rm -rf $RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT/etc/{cron.{hourly,daily,weekly,monthly},cron}
-install -d $RPM_BUILD_ROOT/etc/{crontab.d,rc.d/init.d,logrotate.d,sysconfig} 
-install -d $RPM_BUILD_ROOT/usr/{share/man/{man{1,5,8},pl/man{1,8}},sbin,bin}
-install -d $RPM_BUILD_ROOT/var/{spool/cron,log} 
+install -d $RPM_BUILD_ROOT/etc/{cron.{hourly,daily,weekly,monthly},cron} \
+	$RPM_BUILD_ROOT/etc/{crontab.d,rc.d/init.d,logrotate.d,sysconfig} \
+	$RPM_BUILD_ROOT%{_mandir}/{man{1,5,8},pl/man{1,8}} \
+	$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}} \
+	$RPM_BUILD_ROOT/var/{spool/cron,log} 
 
 make \
     DESTDIR=$RPM_BUILD_ROOT \
