@@ -6,7 +6,7 @@ Summary(tr):	Home computer cron süreci, periyodik program çalýþtýrma \
 Summary(tr):	yeteneði
 Name:		hc-cron
 Version:	0.11
-Release:	4
+Release:	5
 Copyright:	GPL
 Group:		Daemons
 Group(pl):	Serwery
