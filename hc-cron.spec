@@ -181,7 +181,7 @@ done
 %defattr(644,root,root,755)
 %doc README ChangeLog doc/{CONVERSION,FEATURES,MAIL,README.vix,THANKS}
 %attr(754,root,root) /etc/rc.d/init.d/crond
-%attr(640,root,root) %config(noreplace) /etc/logrotate.d/*
+%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/logrotate.d/*
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/sysconfig/*
 %attr(750,root,root) %dir %{_sysconfdir}/cron.*
 %attr(750,root,crontab) %dir %{_sysconfdir}/cron
