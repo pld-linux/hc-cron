@@ -111,6 +111,7 @@ fi
 %config /etc/logrotate.d/cron
 
 %attr(750,root,root) %dir /etc/crontab.d
+/etc/crontab.d/*
 %attr(750,root,root) %dir /etc/cron.*
 
 %attr(0755,root,root) /usr/sbin/crond
