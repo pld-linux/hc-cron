@@ -105,7 +105,7 @@
  	DIR_T   	*dp;
  	cron_db		new_db;
  	user		*u, *nu;
-@@ -62,11 +61,53 @@
+@@ -62,11 +61,54 @@
  		log_it("CRON", getpid(), "STAT FAILED", SPOOL_DIR);
  		(void) exit(ERROR_EXIT);
  	}
