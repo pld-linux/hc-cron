@@ -40,7 +40,7 @@ case "$1" in
         if [ -f /var/lock/subsys/crond ]; then
                 msg_stopping Cron
                 killproc crond
-                rm -f /var/lock/subsys/cron >/dev/null 2>&1
+                rm -f /var/lock/subsys/crond >/dev/null 2>&1
         else
                 msg_Not_Running Cron
                 exit 1
