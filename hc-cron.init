@@ -2,28 +2,35 @@
 #
 # crond          Start/Stop the cron clock daemon.
 #
-# chkconfig: 2345 40 60
-# description: cron is a standard UNIX program that runs user-specified \
-#              programs at periodic scheduled times. hc-cron adds a number \
-#              of features to the basic UNIX cron, including better security \
-#              and more powerful configuration options.
-# processname: crond
-# config: /etc/crontab
-# pidfile: /var/run/crond.pid
+# chkconfig:	2345 40 60
+#
+# description:	cron is a standard UNIX program that runs user-specified \
+#		programs at periodic scheduled times. hc-cron adds a number \
+#		of features to the basic UNIX cron, including better security \
+#		and more powerful configuration options.
+#
+# processname:	crond
+# config:	/etc/crontab
+# pidfile:	/var/run/crond.pid
 
-# Source function library.
+
+# Source function library
 . /etc/rc.d/init.d/functions
 
-# Get config ..
-if [ -f /etc/sysconfig/cron ]; then
-    . /etc/sysconfig/cron
-fi
-    
+# Get service config
+[ -f /etc/sysconfig/hc-cron ] && . /etc/sysconfig/hc-cron
+
+
 # See how we were called.
 case "$1" in
   start)
-	show Starting cron daemon
-	daemon crond
+	# Check if the service is already running?
+	if [ ! -f /var/lock/subsys/crond ]; then
+		show Starting cron daemon
+		daemon crond
+	else
+		echo "Cron already is running"
+	fi
 	touch /var/lock/subsys/crond
 	;;
   stop)
@@ -34,12 +41,12 @@ case "$1" in
   status)
 	status crond
 	;;
-  restart)
+  restart|reload)
 	$0 stop
 	$0 start
 	;;
   *)
-	echo "Usage: $0 {start|stop|status|restart}"
+	echo "Usage: $0 {start|stop|status|restart|reload}"
 	exit 1
 esac
 
