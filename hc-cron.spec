@@ -5,7 +5,7 @@ Summary(pl):	Demon cron dla domowego komputera
 Summary(tr):	Home computer cron süreci, periyodik program çalýþtýrma yeteneði
 Name:		hc-cron
 Version:	0.13
-Release:	6
+Release:	7
 License:	GPL
 Group:		Daemons
 Group(de):	Server
@@ -84,6 +84,7 @@ echo ".so cron.8" > $RPM_BUILD_ROOT%{_mandir}/man8/crond.8
 echo ".so cron.8" > $RPM_BUILD_ROOT%{_mandir}/pl/man8/crond.8
 
 echo "# Simple define users for cron" > $RPM_BUILD_ROOT%{_sysconfdir}/cron/cron.allow
+echo "root" > $RPM_BUILD_ROOT%{_sysconfdir}/cron/cron.allow
 :> $RPM_BUILD_ROOT/var/log/cron
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/crond
