@@ -4,7 +4,7 @@ Summary(pl):	Demon cron dla domowego komputera
 Summary(tr):	Home computer cron süreci, periyodik program çalýþtýrma yeteneði
 Name:		hc-cron
 Version:	0.14
-Release:	11.10
+Release:	11.2
 License:	GPL
 Group:		Daemons
 Source0:	ftp://ftp.berlios.de/pub/hc-cron/stable/%{name}-%{version}.tar.gz
@@ -93,8 +93,6 @@ echo "root" > $RPM_BUILD_ROOT%{_sysconfdir}/cron/cron.allow
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/crond
 install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/cron
-# ???? Duplicate?
-install %{SOURCE3} $RPM_BUILD_ROOT%{_bindir}
 install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/cron.d/system
 install %{SOURCE4} $RPM_BUILD_ROOT%{_mandir}/pl/man1/crontab.1
 install %{SOURCE5} $RPM_BUILD_ROOT%{_mandir}/pl/man8/cron.8
@@ -125,8 +123,10 @@ if [ -f /var/lock/subsys/crond ]; then
 else
 	echo "Run \"/etc/rc.d/init.d/crond start\" to start cron daemon."
 fi
+umask 027
 touch /var/log/cron
-chmod 640 /var/log/cron
+chgrp crontab /var/log/cron
+chmod 660 /var/log/cron
 
 %preun
 if [ "$1" = "0" ]; then
@@ -151,17 +151,14 @@ if [ -f /var/lib/cron.lastrun ]; then
 	mv -f /var/lib/cron.lastrun /var/lib/misc/cron.lastrun
 fi
 
-%triggerpostun  -- vixie-cron <= 0.14-11
-cd /var/spool/cron
-for i in `ls /var/spool/cron/*`
+%triggerpostun -- hc-cron <= 0.14-11
+for i in `/bin/ls /var/spool/cron 2>/dev/null`
 do
-        chown ${i} /var/spool/cron/${i}
+	/bin/chown ${i} /var/spool/cron/${i} 2>/dev/null || :
 done
 /bin/chmod 660 /var/log/cron
 /bin/chgrp crontab /var/log/cron
-/bin/chmod 1730 /var/spool/cron
-/bin/chgrp crontab /var/spool/cron
-/bin/chmod 660 /etc/cron/cron.*
+/bin/chmod 640 /etc/cron/cron.*
 /bin/chgrp crontab /etc/cron/cron.*
 
 %files
@@ -172,7 +169,7 @@ done
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/sysconfig/*
 %attr(750,root,root) %dir %{_sysconfdir}/cron*
 %attr(640,root,crontab) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/cron/*
-%attr(640,root,root) /etc/cron.d/*
+%attr(640,root,crontab) %config(noreplace) %verify(not size mtime md5) /etc/cron.d/*
 %attr(0755,root,root) %{_sbindir}/crond
 %attr(2755,root,crontab) %{_bindir}/crontab
 %attr(1730,root,crontab) %dir /var/spool/cron
