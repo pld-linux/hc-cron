@@ -99,12 +99,22 @@ install %{SOURCE6} $RPM_BUILD_ROOT/etc/sysconfig/cron
 rm -rf $RPM_BUILD_ROOT
 
 %post
-NAME=crond; DESC="cron daemon"; %chkconfig_add
+/sbin/chkconfig --add crond
+if [ -f /var/lock/subsys/crond ]; then
+	/etc/rc.d/init.d/crond restart >&2
+else
+	echo "Run \"/etc/rc.d/init.d/crond start\" to start cron daemon."
+fi
 touch /var/log/cron
 chmod 640 /var/log/cron
 
 %preun
-NAME=crond; %chkconfig_del
+if [ "$1" = "0" ]; then
+	if [ -f /var/lock/subsys/crond ]; then
+		/etc/rc.d/init.d/crond stop >&2
+	fi
+	/sbin/chkconfig --del crond
+fi
 
 %triggerpostun -- vixie-cron
 /sbin/chkconfig --add crond
