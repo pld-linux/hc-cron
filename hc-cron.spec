@@ -128,7 +128,7 @@ fi
 if [ -f /var/lock/subsys/crond ]; then
 	/etc/rc.d/init.d/crond restart >&2
 else
-	%banner %{name} -e << EOF
+	%banner %{name} -e <<EOF
 Run \"/etc/rc.d/init.d/crond start\" to start cron daemon.
 EOF
 # "
