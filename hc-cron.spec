@@ -11,7 +11,7 @@ Group:		Daemons
 Group(pl):	Serwery
 Source0:	ftp://sunsite.unc.edu/pub/Linux/system/daemons/cron/%{name}-%{version}.tar.gz
 Source1:	hc-cron.init
-Source2:	cron.log
+Source2:	cron.logrotate
 Source3:	run-parts
 Source4:	hc-cron.crontab
 Source5:	crontab.1.pl
@@ -74,9 +74,7 @@ install -d $RPM_BUILD_ROOT/etc/{cron.{hourly,daily,weekly,monthly},cron} \
 	$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}} \
 	$RPM_BUILD_ROOT/var/{spool/cron,log} 
 
-make \
-    DESTDIR=$RPM_BUILD_ROOT \
-    install
+make install DESTDIR=$RPM_BUILD_ROOT
 
 install %{SOURCE5} $RPM_BUILD_ROOT%{_mandir}/pl/man1/crontab.1
 install %{SOURCE6} $RPM_BUILD_ROOT%{_mandir}/pl/man8/cron.8
