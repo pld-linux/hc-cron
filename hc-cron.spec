@@ -1,23 +1,24 @@
-Summary:     Home computer cron daemon
-Summary(de): Home computer cron daemon 
-Summary(fr): Démon Home computer cron
-Summary(pl): Demon cron dla domowego komputera
-Summary(tr): Home computer cron süreci, periyodik program çalýþtýrma yeteneði
-Name:        hc-cron
-Version:     0.11
-Release:     2
-Copyright:   GPL
-Group:       Daemons
-Source0:     ftp://sunsite.unc.edu/pub/Linux/system/daemons/cron/%{name}-%{version}.tar.gz
-Source1:     hc-cron.init
-Source2:     cron.log
-Source3:     run-parts
-Source4:     hc-cron.crontab
-Patch:       hc-cron-syscrondir.patch
-Prereq:      /sbin/chkconfig
-Provides:    crontabs
-Buildroot:   /tmp/%{name}-%{version}-root
-Obsoletes:   vixie-cron crontabs
+Summary:	Home computer cron daemon
+Summary(de):	Home computer cron daemon 
+Summary(fr):	Démon Home computer cron
+Summary(pl):	Demon cron dla domowego komputera
+Summary(tr):	Home computer cron süreci, periyodik program çalýþtýrma yeteneði
+Name:		hc-cron
+Version:	0.11
+Release:	3d
+Copyright:	GPL
+Group:		Daemons
+Group(pl):	Serwery
+Source0:	ftp://sunsite.unc.edu/pub/Linux/system/daemons/cron/%{name}-%{version}.tar.gz
+Source1:	hc-cron.init
+Source2:	cron.log
+Source3:	run-parts
+Source4:	hc-cron.crontab
+Patch:		hc-cron-syscrondir.patch
+Prereq:		/sbin/chkconfig
+Provides:	crontabs
+Buildroot:	/tmp/%{name}-%{version}-root
+Obsoletes:	vixie-cron crontabs
 
 %description
 cron is a standard UNIX program that runs user-specified programs at
@@ -98,18 +99,27 @@ fi
 /sbin/chkconfig --add crond
 
 %files
-%defattr(600, root, root, 700)
-%attr(755, root, root) %config /etc/rc.d/init.d/crond
+%defattr(600,root,root,700)
+%attr(744,root,root) %config /etc/rc.d/init.d/crond
+
 %config /etc/logrotate.d/cron
-/etc/crontab.d
+
+%dir /etc/crontab.d
 %dir /etc/cron.*
-%attr(700, root, root) /usr/sbin/crond
-%attr(4755,root, root) /usr/bin/crontab
-%attr(755, root, root) /usr/bin/run-parts
-%attr(644, root,  man) /usr/man/man*/*
-/var/spool/cron
+
+%attr(0744,root,root) /usr/sbin/crond
+%attr(4755,root,root) /usr/bin/crontab
+%attr(0755,root,root) /usr/bin/run-parts
+
+%attr(0644,root, man) /usr/man/man*/*
+
+%dir /var/spool/cron
 
 %changelog
+* Wed Jan 26 1999 Tomasz K³oczko <kloczek@rudy.mif.pg.gda.pl>
+  [0.11-3d]
+- added Gorup(pl).
+
 * Mon Dec  9 1998 Tomasz K³oczko <kloczek@rudy.mif.pg.gda.pl>
   [0.11-2]
 - added gzipping man pages,
