@@ -175,4 +175,4 @@ fi
 - built against glibc
 
 * Wed Feb 19 1997 Erik Troan <ewt@redhat.com>
-- Switch conditional from "axp" to "alpha"
+- Swhich conditional from "axp" to "alpha"
