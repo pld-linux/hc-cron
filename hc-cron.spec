@@ -5,7 +5,7 @@ Summary(pl):	Demon cron dla domowego komputera
 Summary(tr):	Home computer cron süreci, periyodik program çalýþtýrma yeteneði
 Name:		hc-cron
 Version:	0.13
-Release:	3
+Release:	4
 Copyright:	GPL
 Group:		Daemons
 Group(pl):	Serwery
@@ -76,8 +76,8 @@ install -d $RPM_BUILD_ROOT/etc/{cron.{hourly,daily,weekly,monthly},cron} \
 
 make install DESTDIR=$RPM_BUILD_ROOT
 
-install %{SOURCE5} $RPM_BUILD_ROOT%{_mandir}/pl/man1/crontab.1
-install %{SOURCE6} $RPM_BUILD_ROOT%{_mandir}/pl/man8/cron.8
+install %{SOURCE4} $RPM_BUILD_ROOT%{_mandir}/pl/man1/crontab.1
+install %{SOURCE5} $RPM_BUILD_ROOT%{_mandir}/pl/man8/cron.8
 
 echo ".so cron.8" > $RPM_BUILD_ROOT%{_mandir}/man8/crond.8
 echo ".so cron.8" > $RPM_BUILD_ROOT%{_mandir}/pl/man8/crond.8
@@ -88,8 +88,8 @@ echo "# Simple define users for cron" > $RPM_BUILD_ROOT/etc/cron/cron.allow
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/crond
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/logrotate.d/cron
 install %{SOURCE3} $RPM_BUILD_ROOT%{_bindir}
-install %{SOURCE4} $RPM_BUILD_ROOT/etc/cron.d/system
-install %{SOURCE7} $RPM_BUILD_ROOT/etc/sysconfig/cron
+install %{SOURCE3} $RPM_BUILD_ROOT/etc/cron.d/system
+install %{SOURCE6} $RPM_BUILD_ROOT/etc/sysconfig/cron
 
 gzip -9nf $RPM_BUILD_ROOT%{_mandir}/{man*/*,pl/man*/*}
 
