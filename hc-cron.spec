@@ -8,6 +8,7 @@ Release:	10
 License:	GPL
 Group:		Daemons
 Source0:	ftp://ftp.berlios.de/pub/hc-cron/stable/%{name}-%{version}.tar.gz
+# Source0-md5: 19140ce4ceb7d800d2aae6be8b9361cb
 Source1:	%{name}.init
 Source2:	cron.logrotate
 Source3:	%{name}.crontab
