@@ -71,21 +71,21 @@ install -d $RPM_BUILD_ROOT/usr/{sbin,bin,man/{man{1,5,8},pl/man{1,8}}} \
 
 install cron $RPM_BUILD_ROOT/usr/sbin/crond
 install crontab $RPM_BUILD_ROOT/usr/bin
-install crontab.1 $RPM_BUILD_ROOT/usr/man/man1
-install crontab.5 $RPM_BUILD_ROOT/usr/man/man5
-install cron.8 $RPM_BUILD_ROOT/usr/man/man8
-install %{SOURCE5} $RPM_BUILD_ROOT/usr/man/pl/man1/crontab.1
-install %{SOURCE6} $RPM_BUILD_ROOT/usr/man/pl/man8/cron.8
+install crontab.1 $RPM_BUILD_ROOT%{_mandir}/man1
+install crontab.5 $RPM_BUILD_ROOT%{_mandir}/man5
+install cron.8 $RPM_BUILD_ROOT%{_mandir}/man8
+install %{SOURCE5} $RPM_BUILD_ROOT%{_mandir}/pl/man1/crontab.1
+install %{SOURCE6} $RPM_BUILD_ROOT%{_mandir}/pl/man8/cron.8
 
-echo ".so cron.8" > $RPM_BUILD_ROOT/usr/man/man8/crond.8
-echo ".so cron.8" > $RPM_BUILD_ROOT/usr/man/pl/man8/crond.8
+echo ".so cron.8" > $RPM_BUILD_ROOT%{_mandir}/man8/crond.8
+echo ".so cron.8" > $RPM_BUILD_ROOT%{_mandir}/pl/man8/crond.8
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/crond
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/logrotate.d/cron
 install %{SOURCE3} $RPM_BUILD_ROOT/usr/bin
 install %{SOURCE4} $RPM_BUILD_ROOT/etc/crontab.d/system
 
-gzip -9nf $RPM_BUILD_ROOT/usr/man/{man*/*,pl/man*/*}
+gzip -9nf $RPM_BUILD_ROOT%{_mandir}/{man*/*,pl/man*/*}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -122,8 +122,8 @@ fi
 %attr(4755,root,root) /usr/bin/crontab
 %attr(0755,root,root) /usr/bin/run-parts
 
-/usr/man/man*/*
-%lang(pl) /usr/man/pl/man*/*
+%{_mandir}/man*/*
+%lang(pl) %{_mandir}/pl/man*/*
 
 %attr(750,root,root) %dir /var/spool/cron
 
