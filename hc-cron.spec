@@ -5,7 +5,7 @@ Summary(pl): Demon cron dla domowego komputera
 Summary(tr): Home computer cron süreci, periyodik program çalýþtýrma yeteneði
 Name:        hc-cron
 Version:     0.11
-Release:     1
+Release:     2
 Copyright:   GPL
 Group:       Daemons
 Source0:     ftp://sunsite.unc.edu/pub/Linux/system/daemons/cron/%{name}-%{version}.tar.gz
@@ -74,6 +74,8 @@ install %{SOURCE2} $RPM_BUILD_ROOT/etc/logrotate.d/cron
 install %{SOURCE3} $RPM_BUILD_ROOT/usr/bin
 install %{SOURCE4} $RPM_BUILD_ROOT/etc/crontab.d/system
 
+gzip -9nf $RPM_BUILD_ROOT/usr/man/man*/*
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -106,6 +108,11 @@ fi
 /var/spool/cron
 
 %changelog
+* Mon Dec  9 1998 Tomasz K³oczko <kloczek@rudy.mif.pg.gda.pl>
+  [0.11-2]
+- added gzipping man pages,
+- fixed system crontab.
+
 * Mon Nov 16 1998 Tomasz K³oczko <kloczek@rudy.mif.pg.gda.pl>
   [0.11-1]
 - added crontabs to Obsoletes,
