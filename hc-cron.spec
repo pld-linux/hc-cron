@@ -20,16 +20,15 @@ Source6:	cron.sysconfig
 Patch0:		%{name}-syscrondir.patch
 Patch1:		%{name}-paths.patch
 Patch2:		%{name}-time.patch
-Prereq:		/sbin/chkconfig
-Prereq:		rc-scripts
 Requires:	/bin/run-parts
 Requires:	psmisc >= 20.1
 Provides:	crontabs
 Provides:	crondaemon
+Prereq:		rc-scripts
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	crondaemon
 Obsoletes:	vixie-cron
 Obsoletes:	crontabs
-BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 cron is a standard UNIX program that runs user-specified programs at
@@ -133,7 +132,7 @@ fi
 %attr(640,root,root) /etc/cron.d/*
 
 %attr(0755,root,root) %{_sbindir}/crond
-%attr(4711,root,root) %{_bindir}/crontab
+%attr(4755,root,root) %{_bindir}/crontab
 
 %{_mandir}/man*/*
 %lang(pl) %{_mandir}/pl/man*/*
