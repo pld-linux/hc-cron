@@ -469,3 +469,55 @@
  			/* what editor to use if no EDITOR or VISUAL
  			 * environment variable specified.
  			 */
+--- hc-cron-0.14/database.c	2005-02-27 16:42:19.000000000 +0200
++++ hc-cron-0.14.glen/database.c	2005-02-27 16:41:09.000000000 +0200
+@@ -87,7 +87,7 @@
+ 				char	tabname[MAXNAMLEN+1];
+ 				int ln = strlen(dp->d_name);
+ 
+-				/* avoid file names beginning with ".", including "." and "..".
++				/* avoid file names beginning with "." and "#", including "." and "..".
+ 				 */
+ 				if ((dp->d_name[0] == '.') || (dp->d_name[0] == '#'))
+ 					continue;
+@@ -96,11 +96,12 @@
+ 				if (dp->d_name[ln-1] == '~')
+ 					continue;
+ 
+-				/* ignore *.rpmnew and *.rpmsave files */
++				/* ignore *.rpmnew, *.rpmsave and *.rpmorig files */
+ 				if ((ln > 7 && strstr(&dp->d_name[ln-7], ".rpmnew")) ||
+ 					(ln > 8 && strstr(&dp->d_name[ln-8], ".rpmsave")) ||
+-					(ln > 8 && strstr(&dp->d_name[ln-8], ".rpmorig")))
++					(ln > 8 && strstr(&dp->d_name[ln-8], ".rpmorig"))) {
+ 					continue;
++				}
+ 
+ 				snprintf(tabname, MAXNAMLEN+1, "%s/%s", SYSCRONDIR, dp->d_name);
+ 
+@@ -148,11 +149,23 @@
+ 			while (NULL != (dp = readdir(dir))) {
+ 				char	fname[MAXNAMLEN+1],
+ 					tabname[MAXNAMLEN+1];
++				int ln = strlen(dp->d_name);
+ 
+-				/* avoid file names beginning with ".", including "." and "..".
++				/* avoid file names beginning with "." and "#", including "." and "..".
+ 				 */
+-				if (dp->d_name[0] == '.')
++				if ((dp->d_name[0] == '.') || (dp->d_name[0] == '#'))
++					continue;
++
++				/* ignore files ending with ~ */
++				if (dp->d_name[ln-1] == '~')
++					continue;
++
++				/* ignore *.rpmnew, *.rpmsave and *.rpmorig files */
++				if ((ln > 7 && strstr(&dp->d_name[ln-7], ".rpmnew")) ||
++					(ln > 8 && strstr(&dp->d_name[ln-8], ".rpmsave")) ||
++					(ln > 8 && strstr(&dp->d_name[ln-8], ".rpmorig"))) {
+ 					continue;
++				}
+ 
+ 				snprintf(fname, MAXNAMLEN+1, "*system*/%s", dp->d_name);
+ 				snprintf(tabname, MAXNAMLEN+1, "%s/%s", SYSCRONDIR, dp->d_name);
