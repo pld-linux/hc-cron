@@ -8,8 +8,6 @@ Version:	0.14
 Release:	6
 License:	GPL
 Group:		Daemons
-Group(de):	Server
-Group(pl):	Serwery
 Source0:	ftp://hc-cron.berlios.de/pub/hc-cron/stable/%{name}-%{version}.tar.gz
 Source1:	%{name}.init
 Source2:	cron.logrotate
