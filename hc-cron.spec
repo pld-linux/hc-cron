@@ -2,14 +2,16 @@ Summary:	Home computer cron daemon
 Summary(de):	Home computer cron daemon 
 Summary(fr):	Démon Home computer cron
 Summary(pl):	Demon cron dla domowego komputera
-Summary(tr):	Home computer cron süreci, periyodik program çalýþtýrma yeteneði
+Summary(tr):	Home computer cron süreci, periyodik program çalýþtýrma \
+Summary(tr):	yeteneði
 Name:		hc-cron
 Version:	0.11
-Release:	3d
+Release:	4
 Copyright:	GPL
 Group:		Daemons
 Group(pl):	Serwery
-Source0:	ftp://sunsite.unc.edu/pub/Linux/system/daemons/cron/%{name}-%{version}.tar.gz
+URL:		ftp://sunsite.unc.edu/pub/Linux/system/daemons/cron/
+Source0:	%{name}-%{version}.tar.gz
 Source1:	hc-cron.init
 Source2:	cron.log
 Source3:	run-parts
@@ -17,8 +19,9 @@ Source4:	hc-cron.crontab
 Patch:		hc-cron-syscrondir.patch
 Prereq:		/sbin/chkconfig
 Provides:	crontabs
-Buildroot:	/tmp/%{name}-%{version}-root
 Obsoletes:	vixie-cron crontabs
+Buildroot:	/tmp/%{name}-%{version}-root
+
 
 %description
 cron is a standard UNIX program that runs user-specified programs at
@@ -51,13 +54,14 @@ ve daha geliþmiþ yapýlandýrma seçenekleri içerir.
 
 %prep
 %setup -q
-%patch -p1 -b .syscrondir
+%patch -p1 
 
 %build
 make OPTIM="$RPM_OPT_FLAGS"
 
 %install
 rm -rf $RPM_BUILD_ROOT
+
 install -d $RPM_BUILD_ROOT/usr/{sbin,bin,man/man{1,5,8}} \
 	$RPM_BUILD_ROOT/var/spool/cron \
 	$RPM_BUILD_ROOT/etc/{crontab.d,rc.d/init.d,logrotate.d} \
@@ -68,7 +72,8 @@ install crontab $RPM_BUILD_ROOT/usr/bin
 install crontab.1 $RPM_BUILD_ROOT/usr/man/man1
 install crontab.5 $RPM_BUILD_ROOT/usr/man/man5
 install cron.8 $RPM_BUILD_ROOT/usr/man/man8
-echo ".so cron.8" >$RPM_BUILD_ROOT/usr/man/man8/crond.8
+
+echo ".so cron.8" > $RPM_BUILD_ROOT/usr/man/man8/crond.8
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/crond
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/logrotate.d/cron
@@ -99,23 +104,28 @@ fi
 /sbin/chkconfig --add crond
 
 %files
-%defattr(600,root,root,700)
-%attr(744,root,root) %config /etc/rc.d/init.d/crond
+%defattr(640,root,root,755)
+%attr(750,root,root) %config /etc/rc.d/init.d/crond
 
 %config /etc/logrotate.d/cron
 
-%dir /etc/crontab.d
-%dir /etc/cron.*
+%attr(750,root,root) %dir /etc/crontab.d
+%attr(750,root,root) %dir /etc/cron.*
 
-%attr(0744,root,root) /usr/sbin/crond
-%attr(4755,root,root) /usr/bin/crontab
+%attr(0755,root,root) /usr/sbin/crond
+%attr(4711,root,root) /usr/bin/crontab
 %attr(0755,root,root) /usr/bin/run-parts
 
 %attr(0644,root, man) /usr/man/man*/*
 
-%dir /var/spool/cron
+%attr(750,root,root) %dir /var/spool/cron
 
 %changelog
+* Sat Mar 06 1999 Wojtek ¦lusarczyk <wojtek@shadow.eu.org>
+  [0.11-4]
+- fixed files permissions,
+- cleaning up spec.
+
 * Wed Jan 26 1999 Tomasz K³oczko <kloczek@rudy.mif.pg.gda.pl>
   [0.11-3d]
 - added Gorup(pl).
@@ -161,39 +171,6 @@ fi
 - added pl translation
 - changed install procedure to allow building from non-root account
 - added patch that reads /etc/crontab.d/* in addition to /etc/crontab,
-  simplifying automatic adding of cron jobs by packages
-
-* Wed Jun 10 1998 Prospector System <bugs@redhat.com>
-- translations modified for de
-
-* Wed Jun 10 1998 Jeff Johnson <jbj@redhat.com>
-- reset SIGCHLD before grandchild execle (problem #732)
-
-* Sat May 02 1998 Cristian Gafton <gafton@redhat.com>
-- enhanced initscript
-
-* Mon Apr 27 1998 Prospector System <bugs@redhat.com>
-- translations modified for de, fr, tr
-
-* Thu Dec 11 1997 Cristian Gafton <gafton@redhat.com>
-- added a patch to get rid of the dangerous sprintf() calls
-- added BuildRoot and Prereq: /sbin/chkconfig
-
-* Sun Nov 09 1997 Michael K. Johnson <johnsonm@redhat.com>
-- fixed cron/crond dichotomy in init file.
-
-* Wed Oct 29 1997 Donnie Barnes <djb@redhat.com>
-- fixed bad init symlinks
-
-* Thu Oct 23 1997 Erik Troan <ewt@redhat.com>
-- force it to use SIGCHLD instead of defunct SIGCLD
-
-* Mon Oct 20 1997 Erik Troan <ewt@redhat.com>
-- updated for chkconfig
-- added status, restart options to init script
-
-* Tue Jun 17 1997 Erik Troan <ewt@redhat.com>
-- built against glibc
-
-* Wed Feb 19 1997 Erik Troan <ewt@redhat.com>
-- Switch conditional from "axp" to "alpha"
+  simplifying automatic adding of cron jobs by packages,
+- build against GNU libc-2.1
+- start at RH spec file.  
