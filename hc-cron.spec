@@ -8,6 +8,7 @@ Version:	0.13
 Release:	5
 License:	GPL
 Group:		Daemons
+Group(de):	Server
 Group(pl):	Serwery
 Source0:	ftp://sunsite.unc.edu/pub/Linux/system/daemons/cron/%{name}-%{version}.tar.gz
 Source1:	%{name}.init
