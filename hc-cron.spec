@@ -22,7 +22,7 @@ Patch3:		%{name}-closefile.patch
 Patch4:		%{name}-sgid.patch
 PreReq:		rc-scripts
 PreReq:		/sbin/chkconfig
-BuildRequires:	rpmbuild(macros) >= 1.159
+BuildRequires:	rpmbuild(macros) >= 1.176
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(postun):	/usr/sbin/groupdel
@@ -128,7 +128,9 @@ fi
 if [ -f /var/lock/subsys/crond ]; then
 	/etc/rc.d/init.d/crond restart >&2
 else
-	echo "Run \"/etc/rc.d/init.d/crond start\" to start cron daemon."
+	%banner %{name} -e << EOF
+Run \"/etc/rc.d/init.d/crond start\" to start cron daemon.
+EOF
 fi
 umask 027
 touch /var/log/cron
