@@ -4,7 +4,7 @@ Summary(pl):	Demon cron dla domowego komputera
 Summary(tr):	Home computer cron süreci, periyodik program çalýþtýrma yeteneði
 Name:		hc-cron
 Version:	0.14
-Release:	12
+Release:	13
 License:	GPL
 Group:		Daemons
 Source0:	ftp://ftp.berlios.de/pub/hc-cron/stable/%{name}-%{version}.tar.gz
@@ -142,15 +142,25 @@ if [ "$1" = "0" ]; then
         /usr/sbin/groupdel crontab
 fi
 
-%triggerpostun -- vixie-cron
-/sbin/chkconfig --add crond
-
 %triggerpostun -- hc-cron <= 0.14-8
 if [ -f /var/lib/cron.lastrun ]; then
 	mv -f /var/lib/cron.lastrun /var/lib/misc/cron.lastrun
 fi
 
 %triggerpostun -- hc-cron <= 0.14-11
+for i in `/bin/ls /var/spool/cron 2>/dev/null`
+do
+	/bin/chown ${i} /var/spool/cron/${i} 2>/dev/null || :
+done
+/bin/chmod 660 /var/log/cron
+/bin/chgrp crontab /var/log/cron
+/bin/chmod 640 /etc/cron/cron.*
+/bin/chgrp crontab /etc/cron/cron.*
+
+%triggerpostun -- vixie-cron
+/sbin/chkconfig --add crond
+
+%triggerpostun -- vixie-cron <= 3.0.1-85
 for i in `/bin/ls /var/spool/cron 2>/dev/null`
 do
 	/bin/chown ${i} /var/spool/cron/${i} 2>/dev/null || :
