@@ -21,9 +21,9 @@ Patch2:		%{name}-time.patch
 Patch3:		%{name}-closefile.patch
 Patch4:		%{name}-sgid.patch
 PreReq:		rc-scripts
+PreReq:		/sbin/chkconfig
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
-Requires(post,preun):	/sbin/chkconfig
 Requires(postun):	/usr/sbin/groupdel
 Requires:	/bin/run-parts
 Requires:	psmisc >= 20.1
