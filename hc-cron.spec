@@ -26,7 +26,7 @@ Provides:	crondaemon
 Obsoletes:	crondaemon
 Obsoletes:	vixie-cron
 Obsoletes:	crontabs
-Buildroot:	/tmp/%{name}-%{version}-root
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 cron is a standard UNIX program that runs user-specified programs at
