@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # crond          Start/Stop the cron clock daemon.
 #
@@ -17,12 +17,12 @@
 # See how we were called.
 case "$1" in
   start)
-	show "Starting cron daemon"
-	daemon crond
+	show Starting cron daemon
+	daemon +1 crond
 	touch /var/lock/subsys/crond
 	;;
   stop)
-	show "Stopping cron daemon"
+	show Stopping cron daemon
 	killproc crond
 	rm -f /var/lock/subsys/crond
 	;;
@@ -33,7 +33,7 @@ case "$1" in
 	killproc crond -HUP
 	;;
   *)
-	echo "Usage: crond {start|stop|status|restart}"
+	echo "Usage: $0 {start|stop|status|restart}"
 	exit 1
 esac
 
