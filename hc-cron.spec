@@ -63,7 +63,7 @@ ve daha geliþmiþ yapýlandýrma seçenekleri içerir.
 %patch1 -p1 -b .wiget 
 
 %build
-make OPTIM="$RPM_OPT_FLAGS"
+%{__make} OPTIM="$RPM_OPT_FLAGS"
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -74,7 +74,7 @@ install -d $RPM_BUILD_ROOT/etc/{cron.{hourly,daily,weekly,monthly},cron} \
 	$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}} \
 	$RPM_BUILD_ROOT/var/{spool/cron,log} 
 
-make install DESTDIR=$RPM_BUILD_ROOT
+%{__make} install DESTDIR=$RPM_BUILD_ROOT
 
 install %{SOURCE4} $RPM_BUILD_ROOT%{_mandir}/pl/man1/crontab.1
 install %{SOURCE5} $RPM_BUILD_ROOT%{_mandir}/pl/man8/cron.8
