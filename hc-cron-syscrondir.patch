@@ -137,7 +137,7 @@
 +
 +				/* avoid file names beginning with ".", including "." and "..".
 +				 */
-+				if (dp->d_name[0] == '.')
++				if ((dp->d_name[0] == '.') || (dp->d_name[0] == '#'))
 +					continue;
 +
 +				/* ignore files ending with ~ */
@@ -146,7 +146,8 @@
 +
 +				/* ignore *.rpmnew and *.rpmsave files */
 +				if ((ln > 7 && strstr(&dp->d_name[ln-7], ".rpmnew")) ||
-+					(ln > 8 && strstr(&dp->d_name[ln-8], ".rpmsave")))
++					(ln > 8 && strstr(&dp->d_name[ln-8], ".rpmsave")) ||
++					(ln > 8 && strstr(&dp->d_name[ln-8], ".rpmorig")))
 +					continue;
 +
 +				snprintf(tabname, MAXNAMLEN+1, "%s/%s", SYSCRONDIR, dp->d_name);
