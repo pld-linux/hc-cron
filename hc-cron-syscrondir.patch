@@ -105,7 +105,7 @@
  	DIR_T   	*dp;
  	cron_db		new_db;
  	user		*u, *nu;
-@@ -62,11 +61,43 @@
+@@ -62,11 +61,53 @@
  		log_it("CRON", getpid(), "STAT FAILED", SPOOL_DIR);
  		(void) exit(ERROR_EXIT);
  	}
@@ -133,10 +133,20 @@
 +
 +			while (NULL != (dp = readdir(dir))) {
 +				char	tabname[MAXNAMLEN+1];
++				int ln = strlen(dp->d_name);
 +
 +				/* avoid file names beginning with ".", including "." and "..".
 +				 */
 +				if (dp->d_name[0] == '.')
++					continue;
++
++				/* ignore files ending with ~ */
++				if (dp->d_name[ln-1] == '~')
++					continue;
++
++				/* ignore *.rpmnew and *.rpmsave files */
++				if ((ln > 7 && strstr(&dp->d_name[ln-7], ".rpmnew")) ||
++					(ln > 8 && strstr(&dp->d_name[ln-8], ".rpmsave")))
 +					continue;
 +
 +				snprintf(tabname, MAXNAMLEN+1, "%s/%s", SYSCRONDIR, dp->d_name);
