@@ -68,7 +68,7 @@ cron UNIX'de standart olarak belirli zamanlarda bir programý
 daha güvenlidir ve daha geliþmiþ yapýlandýrma seçenekleri içerir.
 
 %prep
-%setup  -q
+%setup -q
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -109,13 +109,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %pre
 if [ -n "`/usr/bin/getgid crontab`" ]; then
-        if [ "`/usr/bin/getgid crontab`" != "117" ]; then
-                echo "Error: group crontab doesn't have gid=117. Correct this before installing cron." 1>&2
-                exit 1
-        fi
+	if [ "`/usr/bin/getgid crontab`" != "117" ]; then
+		echo "Error: group crontab doesn't have gid=117. Correct this before installing cron." 1>&2
+		exit 1
+	fi
 else
-        echo "Adding group crontab GID=117."
-        /usr/sbin/groupadd -g 117 -r -f crontab
+	echo "Adding group crontab GID=117."
+	/usr/sbin/groupadd -g 117 -r -f crontab
 fi
 
 
@@ -141,8 +141,8 @@ fi
 
 %postun
 if [ "$1" = "0" ]; then
-        echo "Removing group crontab."
-        /usr/sbin/groupdel crontab
+	echo "Removing group crontab."
+	/usr/sbin/groupdel crontab
 fi
 
 %triggerpostun -- hc-cron <= 0.14-8
