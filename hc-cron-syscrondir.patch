@@ -1,89 +1,25 @@
-diff -urN hc-cron-0.11.orig/cron.8 hc-cron-0.11/cron.8
---- hc-cron-0.11.orig/cron.8	Thu Oct 22 16:55:33 1998
-+++ hc-cron-0.11/cron.8	Mon Nov 16 09:44:35 1998
-@@ -16,7 +16,7 @@
- .\" */
- .\" 
- .\" 
--.TH CRON 8 "02 October 1998"
-+.TH CRON 8 "16 November 1998"
- .UC 3
- .SH NAME
- hc-cron \- daemon to execute scheduled commands on computers that do not run
+--- hc-cron-0.13/man/cron.8.wiget	Sun Sep 26 01:39:41 1999
++++ hc-cron-0.13/man/cron.8	Mon Oct 11 15:31:13 1999
 @@ -32,7 +32,8 @@
  .IR crontab(1) .
  Crontabs found are loaded into memory.
  .I Cron
 -then searches for /etc/crontab which is in a different format (see
-+then searches for /etc/crontab file and files in /etc/crontab.d
++then searches for /etc/crontab file and files in /etc/cron.d
 +directory which are in a different format (see
  .IR crontab(5) ).
  At startup
  .I cron
-@@ -49,9 +50,13 @@
- Additionally,
- .I cron
- checks each minute to see if its spool directory's modtime (or the modtime
--on
--.IR /etc/crontab )
--has changed, and if it has,
-+of
-+.I /etc/crontab
-+or
-+.I /etc/crontab.d
-+directory or any
-+.I /etc/crontab.d/*
-+file) has changed, and if it has,
- .I cron
- will reload all crontabs which have changed.  Thus
- .I cron
-@@ -69,6 +74,7 @@
+@@ -70,6 +71,7 @@
  /var/spool/cron/
  /etc/passwd
  /etc/crontab
-+/etc/crontab.d/*
++/etc/cron.d/*
  /var/lib/cron.lastrun
  .SH "SEE ALSO"
  crontab(1), crontab(5)
-diff -urN hc-cron-0.11.orig/cron.c hc-cron-0.11/cron.c
---- hc-cron-0.11.orig/cron.c	Thu Oct 22 16:55:32 1998
-+++ hc-cron-0.11/cron.c	Mon Nov 16 09:35:16 1998
-@@ -200,7 +200,8 @@
- 			Debug(DSCH|DEXT, ("user [%s:%d:%d:...] cmd=\"%s\"\n",
- 					  env_get("LOGNAME", e->envp),
- 					  e->uid, e->gid, e->cmd))
--			if (bit_test(e->minute, minute)
-+			if ((e->flags & RUN_NOW)
-+			 || bit_test(e->minute, minute)
- 			 && bit_test(e->hour, hour)
- 			 && bit_test(e->month, month)
- 			 && ( ((e->flags & DOM_STAR) || (e->flags & DOW_STAR))
-diff -urN hc-cron-0.11.orig/cron.h hc-cron-0.11/cron.h
---- hc-cron-0.11.orig/cron.h	Thu Oct 22 16:55:33 1998
-+++ hc-cron-0.11/cron.h	Mon Nov 16 09:35:16 1998
-@@ -57,7 +57,6 @@
- #define DEBUGGING	FALSE
- #endif
- 
--#define MAXLOADAVG	.8	/* at which loadavg don't run IDLE jobs? */
- #define READ_PIPE	0	/* which end of a pipe pair do you read? */
- #define WRITE_PIPE	1	/*   or write to? */
- #define STDIN		0	/* what is stdin's file descriptor? */
-@@ -168,9 +167,8 @@
- #define	DOW_STAR	2
- #define	WHEN_REBOOT	4
- #define RUN_DOWNTIME	8
--#define RUN_DOWN_ONCE   16
--#define RUN_ONLY_IDLE	32
--#define RUN_IDLE_ONCE	64
-+#define RUN_DOWN_ONCE	16
-+#define RUN_NOW		32
- } entry;
- 
- 			/* the crontab database will be a list of the
-diff -urN hc-cron-0.11.orig/crontab.5 hc-cron-0.11/crontab.5
---- hc-cron-0.11.orig/crontab.5	Thu Oct 22 16:55:33 1998
-+++ hc-cron-0.11/crontab.5	Mon Nov 16 09:44:27 1998
+--- hc-cron-0.13/man/crontab.5.wiget	Sun Sep 26 01:39:41 1999
++++ hc-cron-0.13/man/crontab.5	Mon Oct 11 15:31:13 1999
 @@ -14,7 +14,7 @@
  .\" * I'll try to keep a version up to date.  I can be reached as follows:
  .\" * Paul Vixie          <paul@vix.com>          uunet!decwrl!vixie!paul
@@ -114,9 +50,42 @@ diff -urN hc-cron-0.11.orig/crontab.5 hc-cron-0.11/crontab.5
  #
  # run five minutes after midnight, every day; if cron is not running at 
  # that time, catch up at startup; run several times if down for more 
-diff -urN hc-cron-0.11.orig/database.c hc-cron-0.11/database.c
---- hc-cron-0.11.orig/database.c	Thu Oct 22 16:55:33 1998
-+++ hc-cron-0.11/database.c	Mon Nov 16 09:35:16 1998
+--- hc-cron-0.13/cron.c.wiget	Sun Sep 26 01:39:41 1999
++++ hc-cron-0.13/cron.c	Mon Oct 11 15:31:13 1999
+@@ -212,7 +212,8 @@
+ 			Debug(DSCH|DEXT, ("user [%s:%d:%d:...] cmd=\"%s\"\n",
+ 					  env_get("LOGNAME", e->envp),
+ 					  e->uid, e->gid, e->cmd))
+-			if (bit_test(e->minute, minute)
++			if ((e->flags & RUN_NOW)
++			 || bit_test(e->minute, minute)
+ 			 && bit_test(e->hour, hour)
+ 			 && bit_test(e->month, month)
+ 			 && ( ((e->flags & DOM_STAR) || (e->flags & DOW_STAR))
+--- hc-cron-0.13/cron.h.wiget	Sun Sep 26 01:39:41 1999
++++ hc-cron-0.13/cron.h	Mon Oct 11 15:31:13 1999
+@@ -57,7 +57,6 @@
+ #define DEBUGGING	FALSE
+ #endif
+ 
+-#define MAXLOADAVG	.8	/* at which loadavg don't run IDLE jobs? */
+ #define READ_PIPE	0	/* which end of a pipe pair do you read? */
+ #define WRITE_PIPE	1	/*   or write to? */
+ #define STDIN		0	/* what is stdin's file descriptor? */
+@@ -168,9 +167,8 @@
+ #define	DOW_STAR	2
+ #define	WHEN_REBOOT	4
+ #define RUN_DOWNTIME	8
+-#define RUN_DOWN_ONCE   16
+-#define RUN_ONLY_IDLE	32
+-#define RUN_IDLE_ONCE	64
++#define RUN_DOWN_ONCE	16
++#define RUN_NOW		32
+ } entry;
+ 
+ 			/* the crontab database will be a list of the
+--- hc-cron-0.13/database.c.wiget	Sun Sep 26 01:39:41 1999
++++ hc-cron-0.13/database.c	Mon Oct 11 15:31:13 1999
 @@ -29,9 +29,6 @@
  #include <sys/file.h>
  
@@ -241,9 +210,8 @@ diff -urN hc-cron-0.11.orig/database.c hc-cron-0.11/database.c
  		/* file doesn't have a user in passwd file.
  		 */
  		log_it(fname, getpid(), "ORPHAN", "no passwd entry");
-diff -urN hc-cron-0.11.orig/do_command.c hc-cron-0.11/do_command.c
---- hc-cron-0.11.orig/do_command.c	Thu Oct 22 16:55:33 1998
-+++ hc-cron-0.11/do_command.c	Mon Nov 16 09:35:16 1998
+--- hc-cron-0.13/do_command.c.wiget	Sun Sep 26 01:39:41 1999
++++ hc-cron-0.13/do_command.c	Mon Oct 11 15:31:13 1999
 @@ -28,6 +28,8 @@
  #if defined(SYSLOG)
  # include <syslog.h>
@@ -287,9 +255,8 @@ diff -urN hc-cron-0.11.orig/do_command.c hc-cron-0.11/do_command.c
  
  		/* exec the command.
  		 */
-diff -urN hc-cron-0.11.orig/entry.c hc-cron-0.11/entry.c
---- hc-cron-0.11.orig/entry.c	Thu Oct 22 16:55:33 1998
-+++ hc-cron-0.11/entry.c	Mon Nov 16 09:52:17 1998
+--- hc-cron-0.13/entry.c.wiget	Sun Sep 26 01:39:41 1999
++++ hc-cron-0.13/entry.c	Mon Oct 11 15:31:13 1999
 @@ -120,42 +120,42 @@
  	if (ch == '@') {
  		ch = get_string(cmd, MAX_COMMAND, file, " \t\n");
@@ -339,9 +306,8 @@ diff -urN hc-cron-0.11.orig/entry.c hc-cron-0.11/entry.c
  		} else {
  			ecode = e_timespec;
  			goto eof;
-diff -urN hc-cron-0.11.orig/hccron.c hc-cron-0.11/hccron.c
---- hc-cron-0.11.orig/hccron.c	Thu Oct 22 16:55:33 1998
-+++ hc-cron-0.11/hccron.c	Mon Nov 16 09:35:16 1998
+--- hc-cron-0.13/hccron.c.wiget	Sun Sep 26 01:39:41 1999
++++ hc-cron-0.13/hccron.c	Mon Oct 11 15:31:13 1999
 @@ -44,7 +44,7 @@
     register TIME_T	*current = &curstore;
     register struct tm	*curtm;   
@@ -401,9 +367,8 @@ diff -urN hc-cron-0.11.orig/hccron.c hc-cron-0.11/hccron.c
  	job_add(cul->cul_e, cul->cul_u);
  	tmp = cul->next;
          free(cul);
-diff -urN hc-cron-0.11.orig/job.c hc-cron-0.11/job.c
---- hc-cron-0.11.orig/job.c	Thu Oct 22 16:55:33 1998
-+++ hc-cron-0.11/job.c	Mon Nov 16 09:56:06 1998
+--- hc-cron-0.13/job.c.wiget	Sun Sep 26 01:39:41 1999
++++ hc-cron-0.13/job.c	Mon Oct 11 15:31:13 1999
 @@ -78,57 +78,31 @@
  #endif /* ANSI_C */
  {
@@ -481,15 +446,14 @@ diff -urN hc-cron-0.11.orig/job.c hc-cron-0.11/job.c
       }
     return run;
  }
-diff -urN hc-cron-0.11.orig/pathnames.h hc-cron-0.11/pathnames.h
---- hc-cron-0.11.orig/pathnames.h	Thu Oct 22 16:55:33 1998
-+++ hc-cron-0.11/pathnames.h	Mon Nov 16 09:35:16 1998
+--- hc-cron-0.13/pathnames.h.wiget	Sun Sep 26 01:39:41 1999
++++ hc-cron-0.13/pathnames.h	Mon Oct 11 15:31:13 1999
 @@ -73,6 +73,9 @@
  			/* 4.3BSD-style crontab */
  #define SYSCRONTAB	"/etc/crontab"
  
 +			/* directory of additional system crontabs */
-+#define SYSCRONDIR	"/etc/crontab.d"
++#define SYSCRONDIR	"/etc/cron.d"
 +
  			/* what editor to use if no EDITOR or VISUAL
  			 * environment variable specified.

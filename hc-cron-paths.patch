@@ -1,42 +1,5 @@
-diff -Nur hc-cron-0.11/Makefile hc-cron-0.11.pld/Makefile
---- hc-cron-0.11/Makefile	Thu Oct 22 16:55:33 1998
-+++ hc-cron-0.11.pld/Makefile	Sat May 29 17:17:06 1999
-@@ -46,7 +46,7 @@
- DESTROOT	=	$(DESTDIR)/usr
- DESTSBIN	=	$(DESTROOT)/sbin
- DESTBIN		=	$(DESTROOT)/bin
--DESTMAN		=	$(DESTROOT)/man
-+DESTMAN		=	$(DESTROOT)/share/man
- #<<need bitstring.h>>
- INCLUDE		=	-I.
- #<<need getopt()>>
-@@ -108,20 +108,13 @@
- 			$(CC) $(LDFLAGS) -o crontab $(CRONTAB_OBJ) $(LIBS)
- 
- install		:	all
--			$(INSTALL) -c -m 755 -o root -s cron    $(DESTSBIN)/crond
--			$(INSTALL) -c -m 4755 -o root -s crontab $(DESTBIN)/
-+			$(INSTALL) -c -m 755 -s cron $(DESTSBIN)/crond
-+			$(INSTALL) -c -m 4711 -s crontab $(DESTBIN)/
- 			sh putman.sh crontab.1 $(DESTMAN)
--			chmod 644 $(DESTMAN)/man1/crontab.1
--			chown root.root $(DESTMAN)/man1/crontab.1
- 			sh putman.sh cron.8    $(DESTMAN)
- 			chmod 644 $(DESTMAN)/man8/cron.8
--			chown root.root $(DESTMAN)/man8/cron.8
--			rm -f $(DESTMAN)/man8/crond.8
--			ln -sf cron.8 $(DESTMAN)/man8/crond.8
- 			sh putman.sh crontab.5 $(DESTMAN)
--			chmod 644 $(DESTMAN)/man5/crontab.5
--			chown root.root $(DESTMAN)/man5/crontab.5
--
-+	
- clean		:
- 			rm -f *.o cron crontab a.out core tags *~ #*
- 
-diff -Nur hc-cron-0.11/cron.8 hc-cron-0.11.pld/cron.8
---- hc-cron-0.11/cron.8	Sat May 29 17:24:31 1999
-+++ hc-cron-0.11.pld/cron.8	Sat May 29 17:23:16 1999
+--- hc-cron-0.13/man/cron.8.wiget	Mon Oct 11 15:36:40 1999
++++ hc-cron-0.13/man/cron.8	Mon Oct 11 15:40:44 1999
 @@ -37,7 +37,7 @@
  .IR crontab(5) ).
  At startup
@@ -46,18 +9,17 @@ diff -Nur hc-cron-0.11/cron.8 hc-cron-0.11.pld/cron.8
  schedules jobs that occured between then and now (see
  .IR crontab(5) ).
  .PP
-@@ -75,7 +75,7 @@
+@@ -72,7 +72,7 @@
  /etc/passwd
  /etc/crontab
- /etc/crontab.d/*
+ /etc/cron.d/*
 -/var/lib/cron.lastrun
 +/var/state/cron.lastrun
  .SH "SEE ALSO"
  crontab(1), crontab(5)
  .SH AUTHOR
-diff -Nur hc-cron-0.11/crontab.1 hc-cron-0.11.pld/crontab.1
---- hc-cron-0.11/crontab.1	Thu Oct 22 16:55:33 1998
-+++ hc-cron-0.11.pld/crontab.1	Sat May 29 17:21:40 1999
+--- hc-cron-0.13/man/crontab.1.wiget	Sun Sep 26 01:39:41 1999
++++ hc-cron-0.13/man/crontab.1	Mon Oct 11 15:36:40 1999
 @@ -93,8 +93,8 @@
  crontab(5), cron(8)
  .SH FILES
@@ -69,9 +31,38 @@ diff -Nur hc-cron-0.11/crontab.1 hc-cron-0.11.pld/crontab.1
  .fi
  .SH STANDARDS
  The
-diff -Nur hc-cron-0.11/pathnames.h hc-cron-0.11.pld/pathnames.h
---- hc-cron-0.11/pathnames.h	Sat May 29 17:24:31 1999
-+++ hc-cron-0.11.pld/pathnames.h	Sat May 29 17:18:59 1999
+--- hc-cron-0.13/Makefile.wiget	Sun Sep 26 01:39:41 1999
++++ hc-cron-0.13/Makefile	Mon Oct 11 15:39:26 1999
+@@ -46,7 +46,7 @@
+ DESTROOT	=	$(DESTDIR)/usr
+ DESTSBIN	=	$(DESTROOT)/sbin
+ DESTBIN		=	$(DESTROOT)/bin
+-DESTMAN		=	$(DESTROOT)/man
++DESTMAN		=	$(DESTROOT)/share/man
+ #<<need bitstring.h>>
+ INCLUDE		=	-I.
+ #<<need getopt()>>
+@@ -96,13 +96,11 @@
+ 			$(CC) $(LDFLAGS) -o crontab $(CRONTAB_OBJ) $(LIBS)
+ 
+ install		:	all
+-			$(INSTALL) -c -m 750 -o root -s cron    $(DESTSBIN)/crond
+-			$(INSTALL) -c -m 4755 -o root -s crontab $(DESTBIN)/
+-			$(INSTALL) -c -m 644 -o root man/crontab.1 $(DESTMAN)/man1/
+-			$(INSTALL) -c -m 644 -o root man/crontab.5 $(DESTMAN)/man5/
+-			$(INSTALL) -c -m 644 -o root man/cron.8 $(DESTMAN)/man8/
+-			rm -f $(DESTMAN)/man8/crond.8
+-			ln -sf $(DESTMAN)/man8/cron.8 $(DESTMAN)/man8/crond.8
++			$(INSTALL) -c -m 750  -s cron    $(DESTSBIN)/crond
++			$(INSTALL) -c -m 4755 -s crontab $(DESTBIN)/
++			$(INSTALL) -c -m 644 man/crontab.1 $(DESTMAN)/man1/
++			$(INSTALL) -c -m 644 man/crontab.5 $(DESTMAN)/man5/
++			$(INSTALL) -c -m 644 man/cron.8 $(DESTMAN)/man8/
+ clean		:
+ 			rm -f *.o cron crontab a.out core tags *~ #*
+ 
+--- hc-cron-0.13/pathnames.h.wiget	Mon Oct 11 15:36:40 1999
++++ hc-cron-0.13/pathnames.h	Mon Oct 11 15:36:40 1999
 @@ -47,15 +47,15 @@
  			 * LOG_FILE or SYSLOG is defined, we don't log.  If
  			 * both are defined, we log both ways.
@@ -96,7 +87,7 @@ diff -Nur hc-cron-0.11/pathnames.h hc-cron-0.11.pld/pathnames.h
  # define EDITOR _PATH_VI
  #else
 -# define EDITOR "/usr/ucb/vi"
-+# define EDITOR "/usr/bin/vi"
++# define EDITOR "/bin/vi"
  #endif
  
  #ifndef _PATH_BSHELL
