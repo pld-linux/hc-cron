@@ -4,7 +4,7 @@ Summary(pl):	Demon cron dla domowego komputera
 Summary(tr):	Home computer cron süreci, periyodik program çalýþtýrma yeteneði
 Name:		hc-cron
 Version:	0.14
-Release:	15
+Release:	16
 License:	GPL
 Group:		Daemons
 Source0:	ftp://ftp.berlios.de/pub/hc-cron/stable/%{name}-%{version}.tar.gz
@@ -183,7 +183,8 @@ done
 %attr(754,root,root) /etc/rc.d/init.d/crond
 %attr(640,root,root) %config(noreplace) /etc/logrotate.d/*
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/sysconfig/*
-%attr(750,root,root) %dir %{_sysconfdir}/cron*
+%attr(750,root,root) %dir %{_sysconfdir}/cron.*
+%attr(750,root,crontab) %dir %{_sysconfdir}/cron
 %attr(640,root,crontab) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/cron/*
 %attr(640,root,crontab) %config(noreplace) %verify(not size mtime md5) /etc/cron.d/*
 %attr(0755,root,root) %{_sbindir}/crond
