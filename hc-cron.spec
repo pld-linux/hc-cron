@@ -1,5 +1,5 @@
 Summary:	Home computer cron daemon
-Summary(de):	Home computer cron daemon 
+Summary(de):	Home computer cron daemon
 Summary(fr):	Démon Home computer cron
 Summary(pl):	Demon cron dla domowego komputera
 Summary(tr):	Home computer cron süreci, periyodik program çalýþtýrma yeteneði
@@ -74,7 +74,7 @@ install -d $RPM_BUILD_ROOT%{_sysconfdir}/{cron.{hourly,daily,weekly,monthly},cro
 $RPM_BUILD_ROOT%{_sysconfdir}/{cron.d,rc.d/init.d,logrotate.d,sysconfig} \
 	$RPM_BUILD_ROOT%{_mandir}/{man{1,5,8},pl/man{1,8}} \
 	$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}} \
-	$RPM_BUILD_ROOT/var/{spool/cron,log} 
+	$RPM_BUILD_ROOT/var/{spool/cron,log}
 
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
 
