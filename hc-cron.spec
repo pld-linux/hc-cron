@@ -20,6 +20,7 @@ Source7:	cron.sysconfig
 Patch0:		hc-cron-syscrondir.patch
 Patch1:		hc-cron-paths.patch
 Prereq:		/sbin/chkconfig
+Requires:	rc-scripts
 Provides:	crontabs
 Obsoletes:	vixie-cron
 Obsoletes:	crontabs
