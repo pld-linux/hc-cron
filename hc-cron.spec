@@ -4,8 +4,8 @@ Summary(fr):	Démon Home computer cron
 Summary(pl):	Demon cron dla domowego komputera
 Summary(tr):	Home computer cron süreci, periyodik program çalýþtýrma yeteneði
 Name:		hc-cron
-Version:	0.11
-Release:	6
+Version:	0.13
+Release:	1
 Copyright:	GPL
 Group:		Daemons
 Group(pl):	Serwery
@@ -22,6 +22,8 @@ Patch1:		hc-cron-paths.patch
 Prereq:		/sbin/chkconfig
 Requires:	rc-scripts
 Provides:	crontabs
+Provides:	crondaemon
+Obsoletes:	crondaemon
 Obsoletes:	vixie-cron
 Obsoletes:	crontabs
 Buildroot:	/tmp/%{name}-%{version}-root
@@ -57,8 +59,8 @@ ve daha geliþmiþ yapýlandýrma seçenekleri içerir.
 
 %prep
 %setup  -q
-%patch0 -p1 
-%patch1 -p1 
+%patch0 -p1
+%patch1 -p1 -b .wiget 
 
 %build
 make OPTIM="$RPM_OPT_FLAGS"
@@ -67,7 +69,7 @@ make OPTIM="$RPM_OPT_FLAGS"
 rm -rf $RPM_BUILD_ROOT
 
 install -d $RPM_BUILD_ROOT/etc/{cron.{hourly,daily,weekly,monthly},cron} \
-	$RPM_BUILD_ROOT/etc/{crontab.d,rc.d/init.d,logrotate.d,sysconfig} \
+	$RPM_BUILD_ROOT/etc/{cron.d,rc.d/init.d,logrotate.d,sysconfig} \
 	$RPM_BUILD_ROOT%{_mandir}/{man{1,5,8},pl/man{1,8}} \
 	$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}} \
 	$RPM_BUILD_ROOT/var/{spool/cron,log} 
@@ -88,7 +90,7 @@ echo "# Simple define users for cron" > $RPM_BUILD_ROOT/etc/cron/cron.allow
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/crond
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/logrotate.d/cron
 install %{SOURCE3} $RPM_BUILD_ROOT%{_bindir}
-install %{SOURCE4} $RPM_BUILD_ROOT/etc/crontab.d/system
+install %{SOURCE4} $RPM_BUILD_ROOT/etc/cron.d/system
 install %{SOURCE7} $RPM_BUILD_ROOT/etc/sysconfig/cron
 
 gzip -9nf $RPM_BUILD_ROOT%{_mandir}/{man*/*,pl/man*/*}
@@ -104,7 +106,7 @@ else
 	echo "Run \"/etc/rc.d/init.d/crond start\" to start cron daemon."
 fi
 touch /var/log/cron
-chmod 600 /var/log/cron
+chmod 640 /var/log/cron
 
 %preun
 if [ "$1" = "0" ]; then
@@ -125,8 +127,7 @@ fi
 
 %attr(750,root,root) %dir /etc/cron.*
 %attr(640,root,root) %config /etc/cron/*
-%attr(750,root,root) %dir /etc/crontab.d
-%attr(640,root,root) /etc/crontab.d/*
+%attr(640,root,root) /etc/cron.d/*
 
 %attr(0755,root,root) %{_sbindir}/crond
 %attr(4711,root,root) %{_bindir}/crontab
