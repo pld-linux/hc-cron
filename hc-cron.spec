@@ -19,12 +19,12 @@ Patch0:		%{name}-syscrondir.patch
 Patch1:		%{name}-paths.patch
 Patch2:		%{name}-time.patch
 Patch3:		%{name}-closefile.patch
+PreReq:		rc-scripts
+Requires(post,preun):	/sbin/chkconfig
 Requires:	/bin/run-parts
 Requires:	psmisc >= 20.1
 Provides:	crontabs
 Provides:	crondaemon
-Prereq:		rc-scripts
-Prereq:		/sbin/chkconfig
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Obsoletes:	crondaemon
 Obsoletes:	vixie-cron
@@ -111,7 +111,6 @@ else
 fi
 touch /var/log/cron
 chmod 640 /var/log/cron
-
 
 %preun
 if [ "$1" = "0" ]; then
