@@ -22,6 +22,7 @@ Patch3:		%{name}-closefile.patch
 Patch4:		%{name}-sgid.patch
 PreReq:		rc-scripts
 PreReq:		/sbin/chkconfig
+BuildRequires:	rpmbuild(macros) >= 1.159
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(postun):	/usr/sbin/groupdel
