@@ -7,7 +7,7 @@ Version:	0.14
 Release:	10
 License:	GPL
 Group:		Daemons
-Source0:	ftp://hc-cron.berlios.de/pub/hc-cron/stable/%{name}-%{version}.tar.gz
+Source0:	ftp://ftp.berlios.de/pub/hc-cron/stable/%{name}-%{version}.tar.gz
 Source1:	%{name}.init
 Source2:	cron.logrotate
 Source3:	%{name}.crontab
