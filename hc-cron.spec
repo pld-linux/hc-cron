@@ -72,22 +72,23 @@ echo ".so cron.8" >$RPM_BUILD_ROOT/usr/man/man8/crond.8
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/crond
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/logrotate.d/cron
 install %{SOURCE3} $RPM_BUILD_ROOT/usr/bin
-install %{SOURCE3} $RPM_BUILD_ROOT/etc/crontab.d/system
+install %{SOURCE4} $RPM_BUILD_ROOT/etc/crontab.d/system
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %post
 /sbin/chkconfig --add crond
-if test -r /var/run/crond.pid then
-	/etc/rc.d/init.d/crond restart >&2
+if test -r /var/run/crond.pid; then
+	/etc/rc.d/init.d/crond stop >&2
+	/etc/rc.d/init.d/crond start >&2
+else
+	echo "Run \"/etc/rc.d/init.d/crond start\" to start cron daemon."
 fi
 
 %preun
-if [ $1 = 0 ]; then 
-	/etc/rc.d/init.d/crond stop > &2
-	/sbin/chkconfig --del crond
-fi
+/etc/rc.d/init.d/crond stop >&2
+/sbin/chkconfig --del crond
 
 %triggerpostun -- vixie-cron
 /sbin/chkconfig --add crond
