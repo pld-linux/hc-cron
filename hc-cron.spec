@@ -4,7 +4,7 @@ Summary(pl):	Demon cron dla domowego komputera
 Summary(tr):	Home computer cron süreci, periyodik program çalýþtýrma yeteneði
 Name:		hc-cron
 Version:	0.14
-Release:	16
+Release:	17
 License:	GPL
 Group:		Daemons
 Source0:	ftp://ftp.berlios.de/pub/hc-cron/stable/%{name}-%{version}.tar.gz
@@ -31,7 +31,6 @@ Requires:	psmisc >= 20.1
 Provides:	crontabs
 Provides:	crondaemon
 Provides:	group(crontab)
-Obsoletes:	crondaemon
 Obsoletes:	crontabs
 Obsoletes:	fcron
 Obsoletes:	mcron
