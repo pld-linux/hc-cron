@@ -68,7 +68,7 @@ ze wzglêdów bezpieczeñstwa.
 Pierwsza forma wywo³ywania programu
 .I crontab
 s³u¿y do utworzenia nowej tabeli na podstawie podanego pliku lub danych
-pobranych ze standardowego wej¶cia, je¿eli podana zostanie pseudonazwa pliku
+pobranych ze standardowego wej¶cia, je¿eli podana zostanie pseudo-nazwa pliku
 ``-''.
 .PP
 Opcja 

@@ -19,7 +19,7 @@
 .\" 
 .\" $Id$
 .\" 
-.TH CRON 8 "20 Grudzieñ 1993"
+.TH CRON 8 "20 grudnia 1993"
 .UC 4
 .SH NAZWA
 cron \- daemon do wywo³ywania od³o¿onych komend
@@ -31,32 +31,32 @@ powinien byæ uruchamiany z /etc/rc lub /etc/rc.local.
 Wyjdzie on natychmiast, wiêc nie musisz uruchamiaæ go z '&'.
 .PP
 .I Cron
-przegl±da /var/spool/cron/crontabs w poszukiwaniu plików cronatab, które s±
-nazwane wed³ug kont w /etc/passwd; znalezione crontaby ³aduje do pamiêci.
+przegl±da /var/spool/cron/crontabs w poszukiwaniu plików-tabel (crontab),
+nazywanych wed³ug kont w /etc/passwd; znalezione tabele ³aduje do pamiêci.
 .I Cron
 szuka równie¿ /etc/crontab, które jest w innym formacie (zobacz
-.IR crontab(5)).
+.IR crontab (5)).
 Nastêpnie
 .I Cron
-budzi siê co minutê, sprawdzaj±c wszystkie zapisane crontaby, czy
+budzi siê co minutê, sprawdzaj±c wszystkie zapisane tabele, czy
 przypadkiem jaka¶ komenda w tej minucie nie powinna byæ wywo³ana. Podczas
 wywo³ywania komend, wszelkie ich wyj¶cie jest przesy³ane poczt± do
-w³a¶ciciela crontaba (lub do u¿ytkownika podanego w zmiennej ¶rodowiskowej
-MAILTO w crontabie, je¶li taki istnieje).
+w³a¶ciciela tabeli (lub do u¿ytkownika podanego w zmiennej ¶rodowiskowej
+MAILTO w tabeli, je¶li taki istnieje).
 .PP
 Dodatkowo,
 .I cron
-co minutê sprawdza czy czas modyfikacji (modtime) jego katalogu spoolowego
+co minutê sprawdza czy czas modyfikacji (modtime) jego katalogu spool-owego
 (lub czas modyfikacji
-.IR /etc/crontab)
+.IR /etc/crontab )
 by³ zmieniony, a je¶li tak, to
 .I cron
-sprawdzi czasy modyfikacji crontabów i prze³aduje wszystkie te, które by³y
-ostatnio zmienione.  Dlateg nie trzeba restartowaæ
+sprawdzi czasy modyfikacji tabel i prze³aduje wszystkie te, które by³y
+ostatnio zmienione.  Dlatego nie trzeba restartowaæ
 .I crona
-za ka¿dym razem gdy zmodyfikuje siê plik crontab. Zauwa¿, ¿e komenda
+za ka¿dym razem gdy zmodyfikuje siê plik tabeli. Zauwa¿, ¿e komenda
 .IR Crontab (1)
-od¶wie¿a czas modyfikacji za ka¿dym razem gdy zmieni crontab.
+od¶wie¿a czas modyfikacji za ka¿dym razem gdy zmieni tabelê.
 .SH "ZOBACZ TAK¯E"
 crontab(1), crontab(5)
 .SH AUTOR
