@@ -4,7 +4,7 @@ Summary(pl):	Demon cron dla domowego komputera
 Summary(tr):	Home computer cron süreci, periyodik program çalýþtýrma yeteneði
 Name:		hc-cron
 Version:	0.14
-Release:	17
+Release:	17.5
 License:	GPL
 Group:		Daemons
 Source0:	ftp://ftp.berlios.de/pub/hc-cron/stable/%{name}-%{version}.tar.gz
@@ -131,6 +131,7 @@ else
 	%banner %{name} -e << EOF
 Run \"/etc/rc.d/init.d/crond start\" to start cron daemon.
 EOF
+# "
 fi
 umask 027
 touch /var/log/cron
