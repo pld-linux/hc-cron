@@ -152,7 +152,7 @@ fi
   [0.11-1]
 - added crontabs to Obsoletes,
 - added Provides: crontabs,
-- changed %defattr to (600, root, root, 700),
+- changed %defattr to (600,root,root, 700),
 - added restatring service in %post if before insall was started,
 - added stop service in %preun on uninstall package,
 - added NICE=15 in default crontab (as Qrczak suggest),
