@@ -158,7 +158,7 @@ do
 done
 /bin/chmod 660 /var/log/cron
 /bin/chgrp crontab /var/log/cron
-/bin/chmod 1770 /var/spool/cron
+/bin/chmod 1730 /var/spool/cron
 /bin/chgrp crontab /var/spool/cron
 /bin/chmod 660 /etc/cron/cron.*
 /bin/chgrp crontab /etc/cron/cron.*
@@ -182,5 +182,5 @@ done
 %{_mandir}/man*/*
 %lang(pl) %{_mandir}/pl/man*/*
 
-%attr(770,root,crontab) %dir /var/spool/cron
+%attr(1730,root,crontab) %dir /var/spool/cron
 %attr(660,root,crontab) %ghost /var/log/*
