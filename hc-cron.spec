@@ -2,16 +2,14 @@ Summary:	Home computer cron daemon
 Summary(de):	Home computer cron daemon 
 Summary(fr):	Démon Home computer cron
 Summary(pl):	Demon cron dla domowego komputera
-Summary(tr):	Home computer cron süreci, periyodik program çalýþtýrma \
-Summary(tr):	yeteneði
+Summary(tr):	Home computer cron süreci, periyodik program çalýþtýrma yeteneði
 Name:		hc-cron
 Version:	0.11
 Release:	6
 Copyright:	GPL
 Group:		Daemons
 Group(pl):	Serwery
-URL:		ftp://sunsite.unc.edu/pub/Linux/system/daemons/cron
-Source0:	%{name}-%{version}.tar.gz
+Source0:	ftp://sunsite.unc.edu/pub/Linux/system/daemons/cron/%{name}-%{version}.tar.gz
 Source1:	hc-cron.init
 Source2:	cron.log
 Source3:	run-parts
@@ -104,6 +102,8 @@ if [ -f /var/lock/subsys/crond ]; then
 else
 	echo "Run \"/etc/rc.d/init.d/crond start\" to start cron daemon."
 fi
+touch /var/log/cron
+chmod 600 /var/log/cron
 
 %preun
 if [ "$1" = "0" ]; then
@@ -135,7 +135,7 @@ fi
 %lang(pl) %{_mandir}/pl/man*/*
 
 %attr(750,root,root) %dir /var/spool/cron
-%attr(640,root,root) %config %verify(not size mtime md5) /var/log/*
+%attr(640,root,root) %ghost /var/log/*
 
 %changelog
 * Thu Apr 22 1999 Artur Frysiak <wiget@pld.org.pl>
@@ -162,7 +162,6 @@ fi
   [0.11-1]
 - added crontabs to Obsoletes,
 - added Provides: crontabs,
-- changed %defattr to (600,root,root, 700),
 - added restatring service in %post if before insall was started,
 - added stop service in %preun on uninstall package,
 - added NICE=15 in default crontab (as Qrczak suggest),
@@ -195,4 +194,4 @@ fi
 - added patch that reads /etc/crontab.d/* in addition to /etc/crontab,
   simplifying automatic adding of cron jobs by packages,
 - build against GNU libc-2.1
-- start at RH spec file.  
+- start at RH spec file.
