@@ -4,13 +4,14 @@ Summary(fr):	Démon Home computer cron
 Summary(pl):	Demon cron dla domowego komputera
 Summary(tr):	Home computer cron süreci, periyodik program çalýþtýrma yeteneði
 Name:		hc-cron
-Version:	0.13
-Release:	8
+Version:	0.14
+Release:	1
 License:	GPL
 Group:		Daemons
 Group(de):	Server
 Group(pl):	Serwery
-Source0:	ftp://sunsite.unc.edu/pub/Linux/system/daemons/cron/%{name}-%{version}.tar.gz
+#Source0:	ftp://sunsite.unc.edu/pub/Linux/system/daemons/cron/%{name}-%{version}.tar.gz
+Source0:	ftp://hc-cron.berlios.de/pub/hc-cron/stable/hc-cron-0.14.tar.gz
 Source1:	%{name}.init
 Source2:	cron.logrotate
 Source3:	%{name}.crontab
@@ -19,6 +20,7 @@ Source5:	cron.8.pl
 Source6:	cron.sysconfig
 Patch0:		%{name}-syscrondir.patch
 Patch1:		%{name}-paths.patch
+Patch2:         %{name}-time.patch
 Prereq:		/sbin/chkconfig
 Prereq:		rc-scripts
 Requires:	/bin/run-parts
@@ -63,6 +65,7 @@ daha güvenlidir ve daha geliþmiþ yapýlandýrma seçenekleri içerir.
 %setup  -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %build
 %{__make} OPTIM="%{?debug:-O0 -g}%{!?debug:$RPM_OPT_FLAGS}"
