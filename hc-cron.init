@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# crond          Start/Stop the cron clock daemon.
+# crond		Start/Stop the cron clock daemon.
 #
 # chkconfig:	2345 40 60
 #
@@ -36,26 +36,26 @@ case "$1" in
 	fi
 	;;
   stop)
-        # Stop daemons.
-        if [ -f /var/lock/subsys/crond ]; then
-                msg_stopping Cron
-                killproc crond
-                rm -f /var/lock/subsys/crond >/dev/null 2>&1
-        else
-                msg_not_running Cron
-                exit 1
-        fi
+	# Stop daemons.
+	if [ -f /var/lock/subsys/crond ]; then
+		msg_stopping Cron
+		killproc crond
+		rm -f /var/lock/subsys/crond >/dev/null 2>&1
+	else
+		msg_not_running Cron
+		exit 1
+	fi
 																	
 	;;
   status)
 	status crond
 	;;
-  restart)
+  restart|reload)
 	$0 stop
 	$0 start
 	;;
   *)
-	msg_usage "$0 {start|stop|status|restart}"
+	msg_usage "$0 {start|stop|restart|reload|status}"
 	exit 1
 esac
 
