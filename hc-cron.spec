@@ -20,7 +20,7 @@ Source6:	cron.sysconfig
 Patch0:		%{name}-syscrondir.patch
 Patch1:		%{name}-paths.patch
 Prereq:		/sbin/chkconfig
-Requires:	rc-scripts
+Prereq:		rc-scripts
 Requires:	/bin/run-parts
 Provides:	crontabs
 Provides:	crondaemon
