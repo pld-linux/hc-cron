@@ -1,0 +1,109 @@
+--- hc-cron-0.14/misc.c.orig	Sun Aug 31 17:03:01 2003
++++ hc-cron-0.14/misc.c	Sun Aug 31 18:22:24 2003
+@@ -44,6 +44,7 @@
+ #define LOG_CRON LOG_DAEMON
+ #endif
+ 
++#define		CRONT_GID	117
+ 
+ static int		LogFD = ERR;
+ 
+@@ -192,13 +193,13 @@
+ #endif /* ANSI_C */
+ {
+ #if defined(BSD) || defined(POSIX)
+-	if (seteuid(ROOT_UID) < OK) {
+-		perror("seteuid");
++	if (setegid(CRONT_GID) < OK) {
++		perror("setegid");
+ 		exit(ERROR_EXIT);
+ 	}
+ #else
+-	if (setuid(ROOT_UID) < OK) {
+-		perror("setuid");
++	if (setgid(CRONT_GID) < OK) {
++		perror("setgid");
+ 		exit(ERROR_EXIT);
+ 	}
+ #endif
+@@ -218,7 +219,7 @@
+ 	 */
+ 	if (stat(CRONDIR, &sb) < OK && errno == ENOENT) {
+ 		perror(CRONDIR);
+-		if (OK == mkdir(CRONDIR, 0700)) {
++		if (OK == mkdir(CRONDIR, 0770)) {
+ 			fprintf(stderr, "%s: created\n", CRONDIR);
+ 			stat(CRONDIR, &sb);
+ 		} else {
+@@ -759,10 +760,10 @@
+ 
+ 
+ #ifdef HAVE_SAVED_SUIDS
+-static int save_euid;
+-int swap_uids() { save_euid = geteuid(); return seteuid(getuid()); }
+-int swap_uids_back() { return seteuid(save_euid); }
++static int save_egid;
++int swap_gids() { save_egid = getegid(); return setegid(getgid()); }
++int swap_gids_back() { return setegid(save_egid); }
+ #else /*HAVE_SAVED_UIDS*/
+-int swap_uids() { return setreuid(geteuid(), getuid()); }
+-int swap_uids_back() { return swap_uids(); }
++int swap_gids() { return setregid(getegid(), getgid()); }
++int swap_gids_back() { return swap_gids(); }
+ #endif /*HAVE_SAVED_UIDS*/
+--- hc-cron-0.14/crontab.c.orig	Sun Aug 31 13:38:29 2003
++++ hc-cron-0.14/crontab.c	Sun Aug 31 18:18:51 2003
+@@ -233,7 +233,7 @@
+ 			 * the race.
+ 			 */
+ 
+-			if (swap_uids() < OK) {
++			if (swap_gids() < OK) {
+ 				perror("swapping uids");
+ 				exit(ERROR_EXIT);
+ 			}
+@@ -241,7 +241,7 @@
+ 				perror(Filename);
+ 				exit(ERROR_EXIT);
+ 			}
+-			if (swap_uids() < OK) {
++			if (swap_gids() < OK) {
+ 				perror("swapping uids back");
+ 				exit(ERROR_EXIT);
+ 			}
+@@ -350,14 +350,6 @@
+ 		perror(Filename);
+ 		goto fatal;
+ 	}
+-#ifdef HAS_FCHOWN
+-	if (fchown(t, getuid(), getgid()) < 0) {
+-#else
+-	if (chown(Filename, getuid(), getgid()) < 0) {
+-#endif
+-		perror("fchown");
+-		goto fatal;
+-	}
+ 	if (!(NewCrontab = fdopen(t, "r+"))) {
+ 		perror("fdopen");
+ 		goto fatal;
+@@ -593,9 +585,9 @@
+ 	}
+ 
+ #ifdef HAS_FCHOWN
+-	if (fchown(fileno(tmp), ROOT_UID, -1) < OK)
++	if (fchown(fileno(tmp), getuid(), 117) < OK)
+ #else
+-	if (chown(tn, ROOT_UID, -1) < OK)
++	if (chown(tn, getuid(), 117) < OK)
+ #endif
+ 	{
+ 		perror("chown");
+@@ -609,7 +601,7 @@
+ 	if (chmod(tn, 0600) < OK)
+ #endif
+ 	{
+-		perror("chown");
++		perror("chmod");
+ 		fclose(tmp);  unlink(tn);
+ 		return (-2);
+ 	}
