@@ -4,7 +4,7 @@ Summary(pl):	Demon cron dla domowego komputera
 Summary(tr):	Home computer cron süreci, periyodik program çalýþtýrma yeteneði
 Name:		hc-cron
 Version:	0.14
-Release:	11
+Release:	11.9
 License:	GPL
 Group:		Daemons
 Source0:	ftp://ftp.berlios.de/pub/hc-cron/stable/%{name}-%{version}.tar.gz
@@ -19,6 +19,7 @@ Patch0:		%{name}-syscrondir.patch
 Patch1:		%{name}-paths.patch
 Patch2:		%{name}-time.patch
 Patch3:		%{name}-closefile.patch
+Patch4:		%{name}-sgid.patch
 PreReq:		rc-scripts
 Requires(post,preun):	/sbin/chkconfig
 Requires:	/bin/run-parts
@@ -69,9 +70,11 @@ daha güvenlidir ve daha geliþmiþ yapýlandýrma seçenekleri içerir.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %build
-%{__make} OPTIM="%{rpmcflags}"
+%{__make} \
+	 OPTIM="%{rpmcflags}"
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -102,6 +105,18 @@ install %{SOURCE6} $RPM_BUILD_ROOT/etc/sysconfig/cron
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%pre
+if [ -n "`/usr/bin/getgid crontab`" ]; then
+        if [ "`/usr/bin/getgid crontab`" != "117" ]; then
+                echo "Error: group crontab doesn't have gid=117. Correct this before installing cron." 1>&2
+                exit 1
+        fi
+else
+        echo "Adding group crontab GID=117."
+        /usr/sbin/groupadd -g 117 -r -f crontab
+fi
+
+
 %post
 /sbin/chkconfig --add crond
 if [ -f /var/lock/subsys/crond ]; then
@@ -120,6 +135,13 @@ if [ "$1" = "0" ]; then
 	/sbin/chkconfig --del crond
 fi
 
+%postun
+if [ "$1" = "0" ]; then
+        echo "Removing group crontab."
+        /usr/sbin/groupdel crontab
+fi
+
+
 %triggerpostun -- vixie-cron
 /sbin/chkconfig --add crond
 
@@ -127,6 +149,19 @@ fi
 if [ -f /var/lib/cron.lastrun ]; then
 	mv -f /var/lib/cron.lastrun /var/lib/misc/cron.lastrun
 fi
+
+%triggerpostun  -- vixie-cron <= 0.14-11
+cd /var/spool/cron
+for i in `ls /var/spool/cron/*`
+do
+        chown ${i} /var/spool/cron/${i}
+done
+/bin/chmod 660 /var/log/cron
+/bin/chgrp crontab /var/log/cron
+/bin/chmod 1770 /var/spool/cron
+/bin/chgrp crontab /var/spool/cron
+/bin/chmod 660 /etc/cron/cron.*
+/bin/chgrp crontab /etc/cron/cron.*
 
 %files
 %defattr(644,root,root,755)
@@ -138,14 +173,14 @@ fi
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/sysconfig/*
 
 %attr(750,root,root) %dir %{_sysconfdir}/cron*
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/cron/*
+%attr(640,root,crontab) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/cron/*
 %attr(640,root,root) /etc/cron.d/*
 
 %attr(0755,root,root) %{_sbindir}/crond
-%attr(4755,root,root) %{_bindir}/crontab
+%attr(2755,root,crontab) %{_bindir}/crontab
 
 %{_mandir}/man*/*
 %lang(pl) %{_mandir}/pl/man*/*
 
-%attr(750,root,root) %dir /var/spool/cron
-%attr(640,root,root) %ghost /var/log/*
+%attr(770,root,crontab) %dir /var/spool/cron
+%attr(660,root,crontab) %ghost /var/log/*
