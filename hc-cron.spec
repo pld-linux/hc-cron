@@ -10,8 +10,7 @@ Release:	5
 Copyright:	GPL
 Group:		Daemons
 Group(pl):	Serwery
-URL:		ftp://sunsite.unc.edu/pub/Linux/system/daemons/cron/
-Source0:	%{name}-%{version}.tar.gz
+Source0:	ftp://sunsite.unc.edu/pub/Linux/system/daemons/cron/%{name}-%{version}.tar.gz
 Source1:	hc-cron.init
 Source2:	cron.log
 Source3:	run-parts
