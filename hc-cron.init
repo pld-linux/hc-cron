@@ -14,11 +14,16 @@
 # Source function library.
 . /etc/rc.d/init.d/functions
 
+# Get config ..
+if [ -f /etc/sysconfig/cron ]; then
+    . /etc/sysconfig/cron
+fi
+    
 # See how we were called.
 case "$1" in
   start)
 	show Starting cron daemon
-	daemon +1 crond
+	daemon crond
 	touch /var/lock/subsys/crond
 	;;
   stop)
@@ -30,7 +35,8 @@ case "$1" in
 	status crond
 	;;
   restart)
-	killproc crond -HUP
+	$0 stop
+	$0 start
 	;;
   *)
 	echo "Usage: $0 {start|stop|status|restart}"
