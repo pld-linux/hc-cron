@@ -5,22 +5,22 @@ Summary(pl):	Demon cron dla domowego komputera
 Summary(tr):	Home computer cron süreci, periyodik program çalýþtýrma yeteneði
 Name:		hc-cron
 Version:	0.13
-Release:	4
-Copyright:	GPL
+Release:	5
+License:	GPL
 Group:		Daemons
 Group(pl):	Serwery
 Source0:	ftp://sunsite.unc.edu/pub/Linux/system/daemons/cron/%{name}-%{version}.tar.gz
-Source1:	hc-cron.init
+Source1:	%{name}.init
 Source2:	cron.logrotate
-Source3:	hc-cron.crontab
+Source3:	%{name}.crontab
 Source4:	crontab.1.pl
 Source5:	cron.8.pl
 Source6:	cron.sysconfig
-Patch0:		hc-cron-syscrondir.patch
-Patch1:		hc-cron-paths.patch
+Patch0:		%{name}-syscrondir.patch
+Patch1:		%{name}-paths.patch
 Prereq:		/sbin/chkconfig
 Requires:	rc-scripts
-Requires:	/usr/bin/run-parts
+Requires:	/bin/run-parts
 Provides:	crontabs
 Provides:	crondaemon
 Obsoletes:	crondaemon
@@ -31,8 +31,8 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %description
 cron is a standard UNIX program that runs user-specified programs at
 periodic scheduled times. hc-cron adds a number of features to the
-basic UNIX cron, including better security and more powerful configuration
-options.
+basic UNIX cron, including better security and more powerful
+configuration options.
 
 %description -l de
 cron ist ein Standard-UNIX-Programm, das zu vorgegebenen Zeiten vom
@@ -41,21 +41,22 @@ auf als cron aus UNIX, u.a. bessere Sicherheit und leistungsfähigere
 Konfigurationsoptionen.
 
 %description -l fr
-cron est un des programmes UNIX standard qui permet à un utilisateur donné
-de lancer des périodiquement des programmes selon un ordre planifié.
-hc-cron ajoute de nombreuses fonctionnalités au cron UNIX de base, dont
-une plus grande sécurité et des options de configuration plus puissantes.
+cron est un des programmes UNIX standard qui permet à un utilisateur
+donné de lancer des périodiquement des programmes selon un ordre
+planifié. hc-cron ajoute de nombreuses fonctionnalités au cron UNIX de
+base, dont une plus grande sécurité et des options de configuration
+plus puissantes.
 
 %description -l pl
-cron to standardowy uniksowy program, który okresowo uruchamia okre¶lone
-przez u¿ytkowników programy. hc-cron dodaje mo¿liwo¶ci podstawowemu
-uniksowemu cronowi, w tym lepsze bezpieczeñstwo i bogatsze opcje
-konfiguracyjne.
+cron to standardowy uniksowy program, który okresowo uruchamia
+okre¶lone przez u¿ytkowników programy. hc-cron dodaje mo¿liwo¶ci
+podstawowemu uniksowemu cronowi, w tym lepsze bezpieczeñstwo i
+bogatsze opcje konfiguracyjne.
 
 %description -l tr
-cron UNIX'de standart olarak belirli zamanlarda bir programý çalýþtýrmak
-için kullanýlan daemon'dur. hc-cron, standart cron'dan daha güvenlidir
-ve daha geliþmiþ yapýlandýrma seçenekleri içerir.
+cron UNIX'de standart olarak belirli zamanlarda bir programý
+çalýþtýrmak için kullanýlan daemon'dur. hc-cron, standart cron'dan
+daha güvenlidir ve daha geliþmiþ yapýlandýrma seçenekleri içerir.
 
 %prep
 %setup  -q
@@ -68,8 +69,8 @@ ve daha geliþmiþ yapýlandýrma seçenekleri içerir.
 %install
 rm -rf $RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT/etc/{cron.{hourly,daily,weekly,monthly},cron} \
-	$RPM_BUILD_ROOT/etc/{cron.d,rc.d/init.d,logrotate.d,sysconfig} \
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/{cron.{hourly,daily,weekly,monthly},cron} \
+$RPM_BUILD_ROOT%{_sysconfdir}/{cron.d,rc.d/init.d,logrotate.d,sysconfig} \
 	$RPM_BUILD_ROOT%{_mandir}/{man{1,5,8},pl/man{1,8}} \
 	$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}} \
 	$RPM_BUILD_ROOT/var/{spool/cron,log} 
@@ -82,7 +83,7 @@ install %{SOURCE5} $RPM_BUILD_ROOT%{_mandir}/pl/man8/cron.8
 echo ".so cron.8" > $RPM_BUILD_ROOT%{_mandir}/man8/crond.8
 echo ".so cron.8" > $RPM_BUILD_ROOT%{_mandir}/pl/man8/crond.8
 
-echo "# Simple define users for cron" > $RPM_BUILD_ROOT/etc/cron/cron.allow
+echo "# Simple define users for cron" > $RPM_BUILD_ROOT%{_sysconfdir}/cron/cron.allow
 :> $RPM_BUILD_ROOT/var/log/cron
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/crond
@@ -123,8 +124,8 @@ fi
 %attr(640,root,root) %config /etc/logrotate.d/*
 %attr(640,root,root) %config %verify(not size mtime md5) /etc/sysconfig/*
 
-%attr(750,root,root) %dir /etc/cron.*
-%attr(640,root,root) %config %verify(not size mtime md5) /etc/cron/*
+%attr(750,root,root) %dir %{_sysconfdir}/cron.*
+%attr(640,root,root) %config %verify(not size mtime md5) %{_sysconfdir}/cron/*
 %attr(640,root,root) /etc/cron.d/*
 
 %attr(0755,root,root) %{_sbindir}/crond
