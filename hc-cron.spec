@@ -4,7 +4,7 @@ Summary(pl):	Demon cron dla domowego komputera
 Summary(tr):	Home computer cron süreci, periyodik program çalýþtýrma yeteneði
 Name:		hc-cron
 Version:	0.14
-Release:	11.9
+Release:	11.10
 License:	GPL
 Group:		Daemons
 Source0:	ftp://ftp.berlios.de/pub/hc-cron/stable/%{name}-%{version}.tar.gz
@@ -84,23 +84,24 @@ $RPM_BUILD_ROOT%{_sysconfdir}/{cron.d,rc.d/init.d,logrotate.d,sysconfig} \
 	$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}} \
 	$RPM_BUILD_ROOT/var/{spool/cron,log}
 
-%{__make} install DESTDIR=$RPM_BUILD_ROOT
-
-install %{SOURCE4} $RPM_BUILD_ROOT%{_mandir}/pl/man1/crontab.1
-install %{SOURCE5} $RPM_BUILD_ROOT%{_mandir}/pl/man8/cron.8
-
-echo ".so cron.8" > $RPM_BUILD_ROOT%{_mandir}/man8/crond.8
-echo ".so cron.8" > $RPM_BUILD_ROOT%{_mandir}/pl/man8/crond.8
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT
 
 echo "# Simple define users for cron" > $RPM_BUILD_ROOT%{_sysconfdir}/cron/cron.allow
 echo "root" > $RPM_BUILD_ROOT%{_sysconfdir}/cron/cron.allow
 :> $RPM_BUILD_ROOT/var/log/cron
 
-install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/crond
-install %{SOURCE2} $RPM_BUILD_ROOT/etc/logrotate.d/cron
+install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/crond
+install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/cron
+# ???? Duplicate?
 install %{SOURCE3} $RPM_BUILD_ROOT%{_bindir}
-install %{SOURCE3} $RPM_BUILD_ROOT/etc/cron.d/system
-install %{SOURCE6} $RPM_BUILD_ROOT/etc/sysconfig/cron
+install %{SOURCE3} $RPM_BUILD_ROOT%{_sysconfdir}/cron.d/system
+install %{SOURCE4} $RPM_BUILD_ROOT%{_mandir}/pl/man1/crontab.1
+install %{SOURCE5} $RPM_BUILD_ROOT%{_mandir}/pl/man8/cron.8
+install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/cron
+
+echo ".so cron.8" > $RPM_BUILD_ROOT%{_mandir}/man8/crond.8
+echo ".so cron.8" > $RPM_BUILD_ROOT%{_mandir}/pl/man8/crond.8
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -166,21 +167,15 @@ done
 %files
 %defattr(644,root,root,755)
 %doc README ChangeLog doc/{CONVERSION,FEATURES,MAIL,README.vix,THANKS}
-
 %attr(754,root,root) /etc/rc.d/init.d/crond
-
 %attr(640,root,root) %config(noreplace) /etc/logrotate.d/*
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/sysconfig/*
-
 %attr(750,root,root) %dir %{_sysconfdir}/cron*
 %attr(640,root,crontab) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/cron/*
 %attr(640,root,root) /etc/cron.d/*
-
 %attr(0755,root,root) %{_sbindir}/crond
 %attr(2755,root,crontab) %{_bindir}/crontab
-
-%{_mandir}/man*/*
-%lang(pl) %{_mandir}/pl/man*/*
-
 %attr(1730,root,crontab) %dir /var/spool/cron
 %attr(660,root,crontab) %ghost /var/log/*
+%lang(pl) %{_mandir}/pl/man*/*
+%{_mandir}/man*/*
