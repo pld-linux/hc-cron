@@ -89,8 +89,10 @@ else
 fi
 
 %preun
-/etc/rc.d/init.d/crond stop >&2
-/sbin/chkconfig --del crond
+if [ "$1" = "0" ]; then
+	/sbin/chkconfig --del crond
+	/etc/rc.d/init.d/crond stop >&2
+fi
 
 %triggerpostun -- vixie-cron
 /sbin/chkconfig --add crond
@@ -111,6 +113,7 @@ fi
 * Mon Dec  9 1998 Tomasz K³oczko <kloczek@rudy.mif.pg.gda.pl>
   [0.11-2]
 - added gzipping man pages,
+- fixed %preun,
 - fixed system crontab.
 
 * Mon Nov 16 1998 Tomasz K³oczko <kloczek@rudy.mif.pg.gda.pl>
