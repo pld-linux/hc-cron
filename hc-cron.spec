@@ -6,24 +6,26 @@ Summary(tr):	Home computer cron süreci, periyodik program çalýþtýrma \
 Summary(tr):	yeteneði
 Name:		hc-cron
 Version:	0.11
-Release:	5
+Release:	6
 Copyright:	GPL
 Group:		Daemons
 Group(pl):	Serwery
-Source0:	ftp://sunsite.unc.edu/pub/Linux/system/daemons/cron/%{name}-%{version}.tar.gz
+URL:		ftp://sunsite.unc.edu/pub/Linux/system/daemons/cron
+Source0:	%{name}-%{version}.tar.gz
 Source1:	hc-cron.init
 Source2:	cron.log
 Source3:	run-parts
 Source4:	hc-cron.crontab
 Source5:	crontab.1.pl
 Source6:	cron.8.pl
-Patch:		hc-cron-syscrondir.patch
+Source7:	cron.sysconfig
+Patch0:		hc-cron-syscrondir.patch
+Patch1:		hc-cron-paths.patch
 Prereq:		/sbin/chkconfig
 Provides:	crontabs
 Obsoletes:	vixie-cron
 Obsoletes:	crontabs
 Buildroot:	/tmp/%{name}-%{version}-root
-
 
 %description
 cron is a standard UNIX program that runs user-specified programs at
@@ -55,8 +57,9 @@ için kullanýlan daemon'dur. hc-cron, standart cron'dan daha güvenlidir
 ve daha geliþmiþ yapýlandýrma seçenekleri içerir.
 
 %prep
-%setup -q
-%patch -p1 
+%setup  -q
+%patch0 -p1 
+%patch1 -p1 
 
 %build
 make OPTIM="$RPM_OPT_FLAGS"
@@ -64,26 +67,29 @@ make OPTIM="$RPM_OPT_FLAGS"
 %install
 rm -rf $RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT/usr/{sbin,bin,man/{man{1,5,8},pl/man{1,8}}} \
-	$RPM_BUILD_ROOT/var/spool/cron \
-	$RPM_BUILD_ROOT/etc/{crontab.d,rc.d/init.d,logrotate.d} \
-	$RPM_BUILD_ROOT/etc/cron.{hourly,daily,weekly,monthly}
+install -d $RPM_BUILD_ROOT/etc/{cron.{hourly,daily,weekly,monthly},cron}
+install -d $RPM_BUILD_ROOT/etc/{crontab.d,rc.d/init.d,logrotate.d,sysconfig} 
+install -d $RPM_BUILD_ROOT/usr/{share/man/{man{1,5,8},pl/man{1,8}},sbin,bin}
+install -d $RPM_BUILD_ROOT/var/{spool/cron,log} 
 
-install cron $RPM_BUILD_ROOT%{_sbindir}/crond
-install crontab $RPM_BUILD_ROOT%{_bindir}
-install crontab.1 $RPM_BUILD_ROOT%{_mandir}/man1
-install crontab.5 $RPM_BUILD_ROOT%{_mandir}/man5
-install cron.8 $RPM_BUILD_ROOT%{_mandir}/man8
+make \
+    DESTDIR=$RPM_BUILD_ROOT \
+    install
+
 install %{SOURCE5} $RPM_BUILD_ROOT%{_mandir}/pl/man1/crontab.1
 install %{SOURCE6} $RPM_BUILD_ROOT%{_mandir}/pl/man8/cron.8
 
 echo ".so cron.8" > $RPM_BUILD_ROOT%{_mandir}/man8/crond.8
 echo ".so cron.8" > $RPM_BUILD_ROOT%{_mandir}/pl/man8/crond.8
 
+echo "# Simple define users for cron" > $RPM_BUILD_ROOT/etc/cron/cron.allow
+:> $RPM_BUILD_ROOT/var/log/cron
+
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/crond
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/logrotate.d/cron
 install %{SOURCE3} $RPM_BUILD_ROOT%{_bindir}
 install %{SOURCE4} $RPM_BUILD_ROOT/etc/crontab.d/system
+install %{SOURCE7} $RPM_BUILD_ROOT/etc/sysconfig/cron
 
 gzip -9nf $RPM_BUILD_ROOT%{_mandir}/{man*/*,pl/man*/*}
 
@@ -92,9 +98,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 /sbin/chkconfig --add crond
-if test -r /var/run/crond.pid; then
-	/etc/rc.d/init.d/crond stop >&2
-	/etc/rc.d/init.d/crond start >&2
+if [ -f /var/lock/subsys/crond ]; then
+	/etc/rc.d/init.d/crond restart >&2
 else
 	echo "Run \"/etc/rc.d/init.d/crond start\" to start cron daemon."
 fi
@@ -109,23 +114,27 @@ fi
 /sbin/chkconfig --add crond
 
 %files
-%defattr(640,root,root,755)
-%attr(750,root,root) %config /etc/rc.d/init.d/crond
+%defattr(644,root,root,755)
 
-%config /etc/logrotate.d/cron
+%attr(755,root,root) /etc/rc.d/init.d/crond
 
-%attr(750,root,root) %dir /etc/crontab.d
-/etc/crontab.d/*
+%attr(640,root,root) %config /etc/logrotate.d/*
+%attr(640,root,root) %config %verify(not size mtime md5) /etc/sysconfig/*
+
 %attr(750,root,root) %dir /etc/cron.*
+%attr(640,root,root) %config /etc/cron/*
+%attr(750,root,root) %dir /etc/crontab.d
+%attr(640,root,root) /etc/crontab.d/*
 
 %attr(0755,root,root) %{_sbindir}/crond
-%attr(4755,root,root) %{_bindir}/crontab
+%attr(4711,root,root) %{_bindir}/crontab
 %attr(0755,root,root) %{_bindir}/run-parts
 
 %{_mandir}/man*/*
 %lang(pl) %{_mandir}/pl/man*/*
 
 %attr(750,root,root) %dir /var/spool/cron
+%attr(640,root,root) %config %verify(not size mtime md5) /var/log/*
 
 %changelog
 * Thu Apr 22 1999 Artur Frysiak <wiget@pld.org.pl>
