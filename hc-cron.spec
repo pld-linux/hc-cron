@@ -5,7 +5,7 @@ Summary(pl):	Demon cron dla domowego komputera
 Summary(tr):	Home computer cron süreci, periyodik program çalýþtýrma yeteneði
 Name:		hc-cron
 Version:	0.13
-Release:	5
+Release:	6
 License:	GPL
 Group:		Daemons
 Group(de):	Server
@@ -62,16 +62,15 @@ daha güvenlidir ve daha geliþmiþ yapýlandýrma seçenekleri içerir.
 %prep
 %setup  -q
 %patch0 -p1
-%patch1 -p1 -b .wiget 
+%patch1 -p1
 
 %build
-%{__make} OPTIM="$RPM_OPT_FLAGS"
+%{__make} OPTIM="%{!?debug:$RPM_OPT_FLAGS}%{?debug:-O -g}"
 
 %install
 rm -rf $RPM_BUILD_ROOT
-
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/{cron.{hourly,daily,weekly,monthly},cron} \
-$RPM_BUILD_ROOT%{_sysconfdir}/{cron.d,rc.d/init.d,logrotate.d,sysconfig} \
+	$RPM_BUILD_ROOT/etc/{cron.d,rc.d/init.d,logrotate.d,sysconfig} \
 	$RPM_BUILD_ROOT%{_mandir}/{man{1,5,8},pl/man{1,8}} \
 	$RPM_BUILD_ROOT{%{_sbindir},%{_bindir}} \
 	$RPM_BUILD_ROOT/var/{spool/cron,log} 
@@ -93,8 +92,6 @@ install %{SOURCE3} $RPM_BUILD_ROOT%{_bindir}
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/cron.d/system
 install %{SOURCE6} $RPM_BUILD_ROOT/etc/sysconfig/cron
 
-gzip -9nf $RPM_BUILD_ROOT%{_mandir}/{man*/*,pl/man*/*}
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -110,8 +107,10 @@ chmod 640 /var/log/cron
 
 %preun
 if [ "$1" = "0" ]; then
+	if [ -f /var/lock/subsys/crond ]; then
+		/etc/rc.d/init.d/crond stop >&2
+	fi
 	/sbin/chkconfig --del crond
-	/etc/rc.d/init.d/crond stop >&2
 fi
 
 %triggerpostun -- vixie-cron
