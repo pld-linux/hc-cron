@@ -65,7 +65,7 @@ daha güvenlidir ve daha geliþmiþ yapýlandýrma seçenekleri içerir.
 %patch1 -p1
 
 %build
-%{__make} OPTIM="%{!?debug:$RPM_OPT_FLAGS}%{?debug:-O -g}"
+%{__make} OPTIM="%{?debug:-O -g}%{!?debug:$RPM_OPT_FLAGS}"
 
 %install
 rm -rf $RPM_BUILD_ROOT
