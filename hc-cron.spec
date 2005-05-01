@@ -22,7 +22,7 @@ Patch3:		%{name}-closefile.patch
 Patch4:		%{name}-sgid.patch
 PreReq:		rc-scripts
 PreReq:		/sbin/chkconfig
-BuildRequires:	rpmbuild(macros) >= 1.176
+BuildRequires:	rpmbuild(macros) >= 1.202
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(postun):	/usr/sbin/groupdel
@@ -112,16 +112,7 @@ echo ".so cron.8" > $RPM_BUILD_ROOT%{_mandir}/pl/man8/crond.8
 rm -rf $RPM_BUILD_ROOT
 
 %pre
-if [ -n "`/usr/bin/getgid crontab`" ]; then
-	if [ "`/usr/bin/getgid crontab`" != "117" ]; then
-		echo "Error: group crontab doesn't have gid=117. Correct this before installing cron." 1>&2
-		exit 1
-	fi
-else
-	echo "Adding group crontab GID=117."
-	/usr/sbin/groupadd -g 117 -r -f crontab
-fi
-
+%groupadd -g 117 -r -f crontab
 
 %post
 /sbin/chkconfig --add crond
