@@ -180,7 +180,7 @@ done
 %attr(750,root,crontab) %dir %{_sysconfdir}/cron
 %attr(640,root,crontab) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/cron/*
 %attr(640,root,crontab) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/*
-%attr(0755,root,root) %{_sbindir}/crond
+%attr(755,root,root) %{_sbindir}/crond
 %attr(2755,root,crontab) %{_bindir}/crontab
 %attr(1730,root,crontab) %dir /var/spool/cron
 %attr(660,root,crontab) %ghost /var/log/*
