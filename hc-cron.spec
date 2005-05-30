@@ -4,7 +4,7 @@ Summary(pl):	Demon cron dla domowego komputera
 Summary(tr):	Home computer cron süreci, periyodik program çalýþtýrma yeteneði
 Name:		hc-cron
 Version:	0.14
-Release:	18
+Release:	19
 License:	GPL
 Group:		Daemons
 Source0:	ftp://ftp.berlios.de/pub/hc-cron/stable/%{name}-%{version}.tar.gz
@@ -20,6 +20,7 @@ Patch1:		%{name}-paths.patch
 Patch2:		%{name}-time.patch
 Patch3:		%{name}-closefile.patch
 Patch4:		%{name}-sgid.patch
+Patch5:		%{name}-sleep.patch
 PreReq:		rc-scripts
 PreReq:		/sbin/chkconfig
 BuildRequires:	rpmbuild(macros) >= 1.202
@@ -78,6 +79,7 @@ daha güvenlidir ve daha geliþmiþ yapýlandýrma seçenekleri içerir.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 %build
 %{__make} \
