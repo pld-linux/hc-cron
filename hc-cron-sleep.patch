@@ -6,7 +6,7 @@ diff -u -r hc-cron-0.14-orig/cron.c hc-cron-0.14/cron.c
  		Debug(DSCH, ("[%d] sleeping for %d seconds\n",
  			getpid(), seconds_to_wait))
 -		seconds_to_wait = (int) sleep((unsigned int) seconds_to_wait);
-+		(int) sleep((unsigned int) seconds_to_wait);
++		sleep((unsigned int) seconds_to_wait);
 +		seconds_to_wait = (int) (TargetTime - time((time_t*) 0));
  	}
  }
