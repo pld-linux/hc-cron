@@ -1,0 +1,13 @@
+diff -u -r hc-cron-0.14-orig/cron.c hc-cron-0.14/cron.c
+--- hc-cron-0.14-orig/cron.c	2001-03-10 16:18:25.000000000 +0100
++++ hc-cron-0.14/cron.c	2005-05-27 15:20:17.933347200 +0200
+@@ -278,7 +278,8 @@
+ 	while (seconds_to_wait > 0) {
+ 		Debug(DSCH, ("[%d] sleeping for %d seconds\n",
+ 			getpid(), seconds_to_wait))
+-		seconds_to_wait = (int) sleep((unsigned int) seconds_to_wait);
++		(int) sleep((unsigned int) seconds_to_wait);
++		seconds_to_wait = (int) (TargetTime - time((time_t*) 0));
+ 	}
+ }
+ 
