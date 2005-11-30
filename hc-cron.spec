@@ -21,14 +21,16 @@ Patch2:		%{name}-time.patch
 Patch3:		%{name}-closefile.patch
 Patch4:		%{name}-sgid.patch
 Patch5:		%{name}-sleep.patch
-PreReq:		rc-scripts
-PreReq:		/sbin/chkconfig
-BuildRequires:	rpmbuild(macros) >= 1.202
+BuildRequires:	rpmbuild(macros) >= 1.247
+Requires(post,preun):	/sbin/chkconfig
+Requires(post,preun):	rc-scripts
+Requires(postun):	/usr/sbin/groupdel
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
-Requires(postun):	/usr/sbin/groupdel
 Requires:	/bin/run-parts
+Requires:	/sbin/chkconfig
 Requires:	psmisc >= 20.1
+Requires:	rc-scripts
 Provides:	crontabs
 Provides:	crondaemon
 Provides:	group(crontab)
@@ -118,17 +120,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 /sbin/chkconfig --add crond
-if [ -f /var/lock/subsys/crond ]; then
-	/etc/rc.d/init.d/crond restart >&2
-else
-	%banner %{name} -e <<EOF
-Run "/etc/rc.d/init.d/crond start" to start cron daemon.
-EOF
-fi
 umask 027
 touch /var/log/cron
 chgrp crontab /var/log/cron
 chmod 660 /var/log/cron
+%service crond restart "cron daemon"
 
 %preun
 if [ "$1" = "0" ]; then
