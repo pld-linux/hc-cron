@@ -43,7 +43,7 @@ case "$1" in
 	else
 		msg_not_running Cron
 	fi
-																	
+
 	;;
   status)
 	status crond
