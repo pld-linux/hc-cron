@@ -31,8 +31,8 @@ Requires:	/bin/run-parts
 Requires:	/sbin/chkconfig
 Requires:	psmisc >= 20.1
 Requires:	rc-scripts
-Provides:	crontabs
 Provides:	crondaemon
+Provides:	crontabs
 Provides:	group(crontab)
 Obsoletes:	crontabs
 Obsoletes:	fcron
@@ -128,9 +128,7 @@ chmod 660 /var/log/cron
 
 %preun
 if [ "$1" = "0" ]; then
-	if [ -f /var/lock/subsys/crond ]; then
-		/etc/rc.d/init.d/crond stop >&2
-	fi
+	%service crond stop
 	/sbin/chkconfig --del crond
 fi
 
