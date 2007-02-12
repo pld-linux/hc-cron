@@ -1,7 +1,7 @@
 Summary:	Home computer cron daemon
-Summary(fr):	Démon Home computer cron
-Summary(pl):	Demon cron dla domowego komputera
-Summary(tr):	Home computer cron süreci, periyodik program çalıştırma yeteneği
+Summary(fr.UTF-8):   DÃ©mon Home computer cron
+Summary(pl.UTF-8):   Demon cron dla domowego komputera
+Summary(tr.UTF-8):   Home computer cron sÃ¼reci, periyodik program Ã§alÄ±ÅŸtÄ±rma yeteneÄŸi
 Name:		hc-cron
 Version:	0.14
 Release:	23
@@ -48,31 +48,31 @@ started again. Hc-cron is based on the widely used vixie-cron and uses
 the same crontab format so that it can be used as a drop-in
 replacement for that program.
 
-%description -l de
+%description -l de.UTF-8
 cron ist ein Standard-UNIX-Programm, das zu vorgegebenen Zeiten vom
-Benutzer angegebene Programme ausführt. hc-cron weist mehr Funktionen
-auf als cron aus UNIX, u.a. bessere Sicherheit und leistungsfähigere
+Benutzer angegebene Programme ausfÃ¼hrt. hc-cron weist mehr Funktionen
+auf als cron aus UNIX, u.a. bessere Sicherheit und leistungsfÃ¤higere
 Konfigurationsoptionen.
 
-%description -l fr
-cron est un des programmes UNIX standard qui permet à un utilisateur
-donné de lancer des périodiquement des programmes selon un ordre
-planifié. hc-cron ajoute de nombreuses fonctionnalités au cron UNIX de
-base, dont une plus grande sécurité et des options de configuration
+%description -l fr.UTF-8
+cron est un des programmes UNIX standard qui permet Ã  un utilisateur
+donnÃ© de lancer des pÃ©riodiquement des programmes selon un ordre
+planifiÃ©. hc-cron ajoute de nombreuses fonctionnalitÃ©s au cron UNIX de
+base, dont une plus grande sÃ©curitÃ© et des options de configuration
 plus puissantes.
 
-%description -l pl
-hc-cron jest demonem cron dla domowych komputerów. Uruchamia zadania w
-okre¶lonych odstêpach czasu oraz pamiêta kiedy zosta³ wy³±czony, by
-móc wykonaæ pominiête zadania gdy zostanie ponownie uruchomiony.
-Hc-cron jest oparty na szeroko u¿ywanym vixie cronie i u¿ywa tego
-samego formatu pliku crontab, wiêc mo¿na stosowaæ zamiennie te
+%description -l pl.UTF-8
+hc-cron jest demonem cron dla domowych komputerÃ³w. Uruchamia zadania w
+okreÅ›lonych odstÄ™pach czasu oraz pamiÄ™ta kiedy zostaÅ‚ wyÅ‚Ä…czony, by
+mÃ³c wykonaÄ‡ pominiÄ™te zadania gdy zostanie ponownie uruchomiony.
+Hc-cron jest oparty na szeroko uÅ¼ywanym vixie cronie i uÅ¼ywa tego
+samego formatu pliku crontab, wiÄ™c moÅ¼na stosowaÄ‡ zamiennie te
 programy.
 
-%description -l tr
-cron UNIX'de standart olarak belirli zamanlarda bir programı
-çalıştırmak için kullanılan daemon'dur. hc-cron, standart cron'dan
-daha güvenlidir ve daha gelişmiş yapılandırma seçenekleri içerir.
+%description -l tr.UTF-8
+cron UNIX'de standart olarak belirli zamanlarda bir programÄ±
+Ã§alÄ±ÅŸtÄ±rmak iÃ§in kullanÄ±lan daemon'dur. hc-cron, standart cron'dan
+daha gÃ¼venlidir ve daha geliÅŸmiÅŸ yapÄ±landÄ±rma seÃ§enekleri iÃ§erir.
 
 %prep
 %setup -q
