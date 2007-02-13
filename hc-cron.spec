@@ -1,7 +1,7 @@
 Summary:	Home computer cron daemon
-Summary(fr.UTF-8):   Démon Home computer cron
-Summary(pl.UTF-8):   Demon cron dla domowego komputera
-Summary(tr.UTF-8):   Home computer cron süreci, periyodik program çalıştırma yeteneği
+Summary(fr.UTF-8):	Démon Home computer cron
+Summary(pl.UTF-8):	Demon cron dla domowego komputera
+Summary(tr.UTF-8):	Home computer cron süreci, periyodik program çalıştırma yeteneği
 Name:		hc-cron
 Version:	0.14
 Release:	23
