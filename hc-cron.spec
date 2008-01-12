@@ -32,12 +32,11 @@ Requires:	/sbin/chkconfig
 Requires:	psmisc >= 20.1
 Requires:	rc-scripts
 Provides:	crondaemon
-Provides:	crontabs
+Provides:	crontabs = 1.7
 Provides:	group(crontab)
+Obsoletes:	crondaemon
 Obsoletes:	crontabs
 Obsoletes:	mcron
-Conflicts:	fcron
-Conflicts:	vixie-cron
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
