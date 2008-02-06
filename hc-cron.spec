@@ -4,7 +4,7 @@ Summary(pl.UTF-8):	Demon cron dla domowego komputera
 Summary(tr.UTF-8):	Home computer cron süreci, periyodik program çalıştırma yeteneği
 Name:		hc-cron
 Version:	0.14
-Release:	24
+Release:	25
 License:	GPL
 Group:		Daemons
 Source0:	ftp://ftp.berlios.de/pub/hc-cron/stable/%{name}-%{version}.tar.gz
@@ -109,7 +109,6 @@ install %{SOURCE5} $RPM_BUILD_ROOT%{_mandir}/pl/man8/cron.8
 install %{SOURCE6} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/cron
 
 echo ".so cron.8" > $RPM_BUILD_ROOT%{_mandir}/man8/crond.8
-echo ".so cron.8" > $RPM_BUILD_ROOT%{_mandir}/pl/man8/crond.8
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -123,7 +122,7 @@ umask 027
 touch /var/log/cron
 chgrp crontab /var/log/cron
 chmod 660 /var/log/cron
-%service crond restart "cron daemon"
+%service crond restart "Cron Daemon"
 
 %preun
 if [ "$1" = "0" ]; then
@@ -135,34 +134,6 @@ fi
 if [ "$1" = "0" ]; then
 	%groupremove crontab
 fi
-
-%triggerpostun -- hc-cron <= 0.14-8
-if [ -f /var/lib/cron.lastrun ]; then
-	mv -f /var/lib/cron.lastrun /var/lib/misc/cron.lastrun
-fi
-
-%triggerpostun -- hc-cron <= 0.14-11
-for i in `/bin/ls /var/spool/cron 2>/dev/null`
-do
-	/bin/chown ${i} /var/spool/cron/${i} 2>/dev/null || :
-done
-/bin/chmod 660 /var/log/cron
-/bin/chgrp crontab /var/log/cron
-/bin/chmod 640 /etc/cron/cron.*
-/bin/chgrp crontab /etc/cron/cron.*
-
-%triggerpostun -- vixie-cron
-/sbin/chkconfig --add crond
-
-%triggerpostun -- vixie-cron <= 3.0.1-85
-for i in `/bin/ls /var/spool/cron 2>/dev/null`
-do
-	/bin/chown ${i} /var/spool/cron/${i} 2>/dev/null || :
-done
-/bin/chmod 660 /var/log/cron
-/bin/chgrp crontab /var/log/cron
-/bin/chmod 640 /etc/cron/cron.*
-/bin/chgrp crontab /etc/cron/cron.*
 
 %files
 %defattr(644,root,root,755)
