@@ -4,7 +4,7 @@ Summary(pl.UTF-8):	Demon cron dla domowego komputera
 Summary(tr.UTF-8):	Home computer cron süreci, periyodik program çalıştırma yeteneği
 Name:		hc-cron
 Version:	0.14
-Release:	26
+Release:	27
 License:	GPL
 Group:		Daemons
 Source0:	ftp://ftp.berlios.de/pub/hc-cron/stable/%{name}-%{version}.tar.gz
@@ -97,9 +97,18 @@ install -d $RPM_BUILD_ROOT%{_sysconfdir}/{cron.{hourly,daily,weekly,monthly},cro
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-echo "# Simple define users for cron" > $RPM_BUILD_ROOT%{_sysconfdir}/cron/cron.allow
-echo "root" > $RPM_BUILD_ROOT%{_sysconfdir}/cron/cron.allow
-:> $RPM_BUILD_ROOT/var/log/cron
+touch $RPM_BUILD_ROOT/var/log/cron
+
+cat > $RPM_BUILD_ROOT%{_sysconfdir}/cron/cron.allow << EOF
+# cron.allow	This file describes the names of the users which are
+#		allowed to use the local cron daemon
+root
+EOF
+
+cat > $RPM_BUILD_ROOT%{_sysconfdir}/cron/cron.deny << EOF2
+# cron.deny	This file describes the names of the users which are
+#		NOT allowed to use the local cron daemon
+EOF2
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/crond
 install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/cron
@@ -143,7 +152,8 @@ fi
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/*
 %attr(750,root,root) %dir %{_sysconfdir}/cron.*
 %attr(750,root,crontab) %dir %{_sysconfdir}/cron
-%attr(640,root,crontab) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/cron/*
+%attr(640,root,crontab) %config(noreplace,missingok) %verify(not md5 mtime size) %{_sysconfdir}/cron/cron.allow
+%attr(640,root,crontab) %config(noreplace,missingok) %verify(not md5 mtime size) %{_sysconfdir}/cron/cron.deny
 %attr(640,root,crontab) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/*
 %attr(755,root,root) %{_sbindir}/crond
 %attr(2755,root,crontab) %{_bindir}/crontab
